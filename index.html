@@ -55,7 +55,7 @@
   .brand-text span{font-size:11.5px;color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .tabs{display:flex;gap:6px;flex-shrink:0;}
   .tab{
-    border:1px solid var(--border);background:#fff;color:#5c7characters;
+    border:1px solid var(--border);background:#fff;
     color:#5c7d9e;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;
     cursor:pointer;transition:.18s;font-family:inherit;
   }
@@ -146,8 +146,12 @@
     padding:22px;box-shadow:var(--shadow);margin-bottom:16px;
   }
   .question-text{
-    font-size:17px;font-weight:600;color:#1f3characters;
-    color:#1f3550;margin:0 0 18px;line-height:1.6;
+    font-size:17px;font-weight:600;color:#1f3550;margin:0 0 18px;line-height:1.6;
+    display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;
+  }
+  .question-text .qnum{
+    background:var(--primary-soft);color:var(--primary-dark);border-radius:8px;
+    padding:2px 10px;font-size:12px;font-weight:800;flex-shrink:0;margin-top:2px;
   }
   .options{display:flex;flex-direction:column;gap:10px;}
   .option{
@@ -182,7 +186,7 @@
   /* ---------- PASSAGE ---------- */
   .passage{
     background:#f7fbff;border:1px solid var(--border);border-radius:var(--radius);
-    margin-bottom:16px;overflow:hidden;
+    margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow);
   }
   .passage summary{
     cursor:pointer;padding:14px 18px;font-weight:700;font-size:13.5px;
@@ -196,6 +200,16 @@
     border-top:1px solid var(--border);padding-top:14px;
   }
   .passage-body p{margin:0 0 10px;}
+
+  .part-divider{
+    display:flex;align-items:center;gap:12px;
+    margin:22px 0 16px;color:var(--primary-dark);
+  }
+  .part-divider .line{flex:1;height:1px;background:var(--border);}
+  .part-divider .label{
+    font-size:13px;font-weight:800;letter-spacing:.3px;
+    background:var(--primary-soft);border-radius:999px;padding:6px 14px;
+  }
 
   /* ---------- FEEDBACK ---------- */
   .feedback{
@@ -663,7 +677,7 @@ const TOTAL = QUESTIONS.length; // 28
 const LS = {
   HISTORY: "fa1_history_v1",
   WRONG: "fa1_wrong_v1",
-  SESSION: "fa1_session_v1",
+  SESSION: "fa1_session_v2",   /* v2: cấu trúc phiên bản mới (chia part1/part2) */
   RESULT: "fa1_result_v1"
 };
 
@@ -706,20 +720,21 @@ function formatDate(iso) {
    3. TRẠNG THÁI
    ============================================================ */
 
-let session = null;      // bài đang làm
-let lastResult = null;   // kết quả gần nhất
+let session = null;
+let lastResult = null;
 let view = "home";
+
+const app = document.getElementById("app");
 
 /* ============================================================
    4. KHỞI TẠO
    ============================================================ */
 
-const app = document.getElementById("app");
-
 function init() {
   session = load(LS.SESSION, null);
   lastResult = load(LS.RESULT, null);
   if (session && session.submitted) session = null;
+  if (session && (!session.part1 || !session.part2)) session = null; // không tương thích cũ
 
   document.querySelectorAll(".tab").forEach(function (tab) {
     tab.addEventListener("click", function () { showView(tab.dataset.view); });
@@ -763,11 +778,12 @@ function handleClick(e) {
     case "review":          showView("review"); break;
     case "resume":          showView("quiz"); break;
     case "discard":         discardSession(); break;
-    case "select":          selectOption(Number(btn.dataset.orig)); break;
+    case "select":          selectOption(Number(btn.dataset.qid), Number(btn.dataset.orig)); break;
     case "prev":            navigate(-1); break;
     case "next":            navigate(1); break;
+    case "back-to-part1":   goToPart1(); break;
     case "submit":          submitTest(); break;
-    case "check":           checkAnswer(); break;
+    case "check":           checkAnswer(Number(btn.dataset.qid)); break;
     case "home":            showView("home"); break;
     case "progress":        showView("progress"); break;
     case "clear-data":      clearData(); break;
@@ -775,8 +791,42 @@ function handleClick(e) {
 }
 
 /* ============================================================
-   6. BẮT ĐẦU CÁC CHẾ ĐỘ
+   6. XÂY DỰNG PHIÊN LÀM BÀI
    ============================================================ */
+
+function makeItem(q, shuffleOptions) {
+  const order = q.options.map(function (_, i) { return i; });
+  return {
+    qid: q.id,
+    order: shuffleOptions ? shuffle(order) : order
+  };
+}
+
+function buildSession(mode) {
+  const part1Src = QUESTIONS.filter(function (q) { return q.part === 1; });
+  const part2Src = QUESTIONS.filter(function (q) { return q.part === 2; });
+
+  const doShuffle = (mode === "random");
+  let part1 = part1Src.map(function (q) { return makeItem(q, doShuffle); });
+  let part2 = part2Src.map(function (q) { return makeItem(q, doShuffle); });
+
+  if (doShuffle) {
+    part1 = shuffle(part1);
+    part2 = shuffle(part2);
+  }
+
+  return {
+    mode: mode,
+    part1: part1,
+    part2: part2,
+    answers: {},
+    checked: {},
+    currentPart: 1,
+    currentIndex: 0,
+    submitted: false,
+    startedAt: new Date().toISOString()
+  };
+}
 
 function confirmOverwrite() {
   if (session && !session.submitted) {
@@ -787,42 +837,14 @@ function confirmOverwrite() {
 
 function startTest(isRandom) {
   if (!confirmOverwrite()) return;
-
-  let items = QUESTIONS.map(function (q) {
-    return { qid: q.id, order: q.options.map(function (_, i) { return i; }) };
-  });
-
-  if (isRandom) {
-    items = shuffle(items);
-    items.forEach(function (it) { it.order = shuffle(it.order); });
-  }
-
-  session = {
-    mode: isRandom ? "random" : "full",
-    items: items,
-    answers: {},
-    current: 0,
-    submitted: false,
-    startedAt: new Date().toISOString()
-  };
+  session = buildSession(isRandom ? "random" : "full");
   save(LS.SESSION, session);
   showView("quiz");
 }
 
 function startPractice() {
   if (!confirmOverwrite()) return;
-
-  session = {
-    mode: "practice",
-    items: QUESTIONS.map(function (q) {
-      return { qid: q.id, order: q.options.map(function (_, i) { return i; }) };
-    }),
-    answers: {},
-    checked: {},
-    current: 0,
-    submitted: false,
-    startedAt: new Date().toISOString()
-  };
+  session = buildSession("practice");
   save(LS.SESSION, session);
   showView("quiz");
 }
@@ -832,6 +854,16 @@ function discardSession() {
   session = null;
   remove(LS.SESSION);
   render();
+}
+
+/* Đếm số câu đã trả lời */
+function countAnswered() {
+  if (!session) return 0;
+  let n = 0;
+  session.part1.concat(session.part2).forEach(function (it) {
+    if (session.answers[it.qid] !== undefined) n++;
+  });
+  return n;
 }
 
 /* ============================================================
@@ -846,16 +878,13 @@ function renderHome() {
     "<p>28 câu hỏi · Ngữ pháp – Từ vựng – Đọc hiểu · Không giới hạn thời gian · Có giải thích tiếng Việt</p>" +
     '<div class="hero-badges">' +
       "<span>📝 21 câu Grammaire &amp; Vocabulaire</span>" +
-      "<span>📖 7 câu Compréhension écrite</span>" +
+      "<span>📖 7 câu Compréhension écrite (kèm bài đọc)</span>" +
       "<span>💾 Tự động lưu tiến độ</span>" +
     "</div>" +
   "</section>";
 
-  // Banner tiếp tục bài làm dở
   if (session && !session.submitted) {
-    const answered = session.items.filter(function (it) {
-      return session.answers[it.qid] !== undefined;
-    }).length;
+    const answered = countAnswered();
     const label = session.mode === "practice" ? "phần luyện tập" :
                   session.mode === "random" ? "đề ngẫu nhiên" : "đề đầy đủ";
     html += '<div class="resume">' +
@@ -872,14 +901,14 @@ function renderHome() {
   html += '<div class="mode-card">' +
     '<div class="mode-icon">📝</div>' +
     "<h3>Làm toàn bộ đề</h3>" +
-    "<p>28 câu hỏi theo đúng thứ tự gốc của đề thi. Chuyển câu tự do, có thanh tiến trình và nộp bài ở cuối.</p>" +
+    "<p>21 câu ngữ pháp làm từng câu theo đúng thứ tự. Sau đó là bài đọc kèm 7 câu hỏi đọc hiểu hiển thị cùng nhau.</p>" +
     '<button class="btn primary" data-action="start-full">Bắt đầu</button>' +
   "</div>";
 
   html += '<div class="mode-card">' +
     '<div class="mode-icon">🔀</div>' +
     "<h3>Đề ngẫu nhiên</h3>" +
-    "<p>Xáo trộn thứ tự câu hỏi và thứ tự đáp án A–B–C–D. Mỗi lần bắt đầu sẽ là một đề khác nhau.</p>" +
+    "<p>Xáo trộn thứ tự câu hỏi phần I và thứ tự đáp án A–B–C–D. Phần đọc hiểu luôn đi kèm bài đọc.</p>" +
     '<button class="btn primary" data-action="start-random">Bắt đầu</button>' +
   "</div>";
 
@@ -912,19 +941,13 @@ function renderHome() {
    8. MÀN HÌNH LÀM BÀI
    ============================================================ */
 
+const LETTERS = ["A", "B", "C", "D"];
+
 function renderQuiz() {
   if (!session) { showView("home"); return; }
 
-  const item = session.items[session.current];
-  const q = getQuestion(item.qid);
   const isPractice = session.mode === "practice";
-  const isChecked = !!(isPractice && session.checked && session.checked[q.id]);
-  const chosen = session.answers[q.id];
-  const letters = ["A", "B", "C", "D"];
-
-  const answeredCount = session.items.filter(function (it) {
-    return session.answers[it.qid] !== undefined;
-  }).length;
+  const answeredCount = countAnswered();
   const pct = Math.round((answeredCount / TOTAL) * 100);
 
   const modeLabel =
@@ -932,50 +955,63 @@ function renderQuiz() {
     session.mode === "random" ? "🔀 Đề ngẫu nhiên" :
     "🎯 Luyện tập từng câu";
 
-  const partLabel = q.part === 1 ? "Partie I · Grammaire & Vocabulaire" : "Partie II · Compréhension écrite";
-
   let html = '<div class="quiz-top">' +
     '<div class="quiz-meta">' +
       '<span class="pill">' + modeLabel + "</span>" +
-      '<span class="pill part">' + partLabel + "</span>" +
-    "</div>" +
-    '<div class="quiz-counter">Question <b>' + (session.current + 1) + "</b> / " + TOTAL + "</div>" +
-    '<div class="progress"><div class="progress-fill" id="progressFill" style="width:' + pct + '%"></div></div>' +
+      '<span class="pill part">' + (session.currentPart === 1
+        ? "Partie I · Grammaire & Vocabulaire"
+        : "Partie II · Compréhension écrite") + "</span>" +
+    "</div>";
+
+  if (session.currentPart === 1) {
+    html += '<div class="quiz-counter">Question <b>' + (session.currentIndex + 1) +
+            "</b> / 21 <span style=\"color:#a8bdd3\">· Phần I</span></div>";
+  } else {
+    html += '<div class="quiz-counter">Câu <b>22</b> – <b>28</b> ' +
+            '<span style="color:#a8bdd3">· Phần II (bài đọc + 7 câu hỏi)</span></div>';
+  }
+
+  html += '<div class="progress"><div class="progress-fill" id="progressFill" style="width:' + pct + '%"></div></div>' +
     '<div class="answered-label" id="answeredLabel">Đã trả lời: <b>' + answeredCount + "</b> / " + TOTAL + "</div>" +
   "</div>";
 
-  // Đoạn văn đọc hiểu cho phần II
-  if (q.part === 2) {
-    html += '<details class="passage" open>' +
-      "<summary>📖 Texte : Vũng Tàu – une belle ville au bord de la mer</summary>" +
-      '<div class="passage-body">' + READING_HTML + "</div>" +
-    "</details>";
+  if (session.currentPart === 1) {
+    html += renderPart1Question(isPractice);
+  } else {
+    html += renderPart2Block(isPractice);
   }
 
-  // Thẻ câu hỏi
-  html += '<div class="question-card">';
-  html += '<p class="question-text">' + esc(q.question) + "</p>";
-  html += '<div class="options">';
+  app.innerHTML = html;
+}
+
+/* ---------- Phần I: 1 câu / lần ---------- */
+
+function renderPart1Question(isPractice) {
+  const item = session.part1[session.currentIndex];
+  const q = getQuestion(item.qid);
+  const isChecked = !!(isPractice && session.checked[q.id]);
+  const chosen = session.answers[q.id];
+
+  let html = '<div class="question-card" data-question-id="' + q.id + '">' +
+    '<p class="question-text">' + esc(q.question) + "</p>" +
+    '<div class="options">';
 
   item.order.forEach(function (origIdx, pos) {
     let cls = "option";
     if (chosen === origIdx) cls += " selected";
-
     if (isChecked) {
       if (origIdx === q.correct) cls += " correct";
       else if (chosen === origIdx) cls += " wrong";
     }
-
-    html += '<button class="' + cls + '" data-action="select" data-orig="' + origIdx + '"' +
-      (isChecked ? " disabled" : "") + ">" +
-      '<span class="option-letter">' + letters[pos] + "</span>" +
+    html += '<button class="' + cls + '" data-action="select" data-qid="' + q.id +
+      '" data-orig="' + origIdx + '"' + (isChecked ? " disabled" : "") + ">" +
+      '<span class="option-letter">' + LETTERS[pos] + "</span>" +
       '<span class="option-text">' + esc(q.options[origIdx]) + "</span>" +
     "</button>";
   });
 
-  html += "</div>"; // .options
+  html += "</div>";
 
-  // Phản hồi ở chế độ luyện tập
   if (isChecked) {
     const ok = chosen === q.correct;
     html += '<div class="feedback ' + (ok ? "ok" : "no") + '">' +
@@ -987,46 +1023,122 @@ function renderQuiz() {
 
   html += "</div>"; // .question-card
 
-  // Nút điều hướng
+  const isLast = session.currentIndex === session.part1.length - 1;
+  const canCheck = chosen !== undefined && !isChecked;
+
   if (isPractice) {
-    const canCheck = chosen !== undefined && !isChecked;
     html += '<div class="quiz-actions">' +
-      '<button class="btn ghost" data-action="prev"' + (session.current === 0 ? " disabled" : "") + ">← Câu trước</button>" +
-      '<button class="btn primary" data-action="check"' + (canCheck ? "" : " disabled") + ">✔ Kiểm tra đáp án</button>" +
+      '<button class="btn ghost" data-action="prev"' + (session.currentIndex === 0 ? " disabled" : "") + ">← Câu trước</button>" +
+      '<button class="btn primary" data-action="check" data-qid="' + q.id + '"' + (canCheck ? "" : " disabled") + ">✔ Kiểm tra đáp án</button>" +
       '<button class="btn ghost" data-action="next">Câu tiếp theo →</button>' +
     "</div>";
   } else {
-    const isLast = session.current === TOTAL - 1;
     html += '<div class="quiz-actions">' +
-      '<button class="btn ghost" data-action="prev"' + (session.current === 0 ? " disabled" : "") + ">← Câu trước</button>" +
-      '<button class="btn ghost" data-action="next"' + (isLast ? " disabled" : "") + ">Câu tiếp theo →</button>" +
+      '<button class="btn ghost" data-action="prev"' + (session.currentIndex === 0 ? " disabled" : "") + ">← Câu trước</button>" +
+      '<button class="btn primary" data-action="next">' + (isLast ? "Sang phần II →" : "Câu tiếp theo →") + "</button>" +
+    "</div>";
+  }
+
+  return html;
+}
+
+/* ---------- Phần II: bài đọc + 7 câu hỏi cùng nhau ---------- */
+
+function renderPart2Block(isPractice) {
+  let html = "";
+
+  html += '<details class="passage" open>' +
+    "<summary>📖 Texte : Vũng Tàu – une belle ville au bord de la mer</summary>" +
+    '<div class="passage-body">' + READING_HTML + "</div>" +
+  "</details>";
+
+  html += '<div class="part-divider">' +
+    '<span class="line"></span>' +
+    '<span class="label">Questions 22 – 28</span>' +
+    '<span class="line"></span>' +
+  "</div>";
+
+  session.part2.forEach(function (item) {
+    const q = getQuestion(item.qid);
+    const isChecked = !!(isPractice && session.checked[q.id]);
+    const chosen = session.answers[q.id];
+
+    html += '<div class="question-card" data-question-id="' + q.id + '">' +
+      '<p class="question-text">' +
+        '<span class="qnum">Câu ' + q.id + "</span>" +
+        "<span>" + esc(q.question) + "</span>" +
+      "</p>" +
+      '<div class="options">';
+
+    item.order.forEach(function (origIdx, pos) {
+      let cls = "option";
+      if (chosen === origIdx) cls += " selected";
+      if (isChecked) {
+        if (origIdx === q.correct) cls += " correct";
+        else if (chosen === origIdx) cls += " wrong";
+      }
+      html += '<button class="' + cls + '" data-action="select" data-qid="' + q.id +
+        '" data-orig="' + origIdx + '"' + (isChecked ? " disabled" : "") + ">" +
+        '<span class="option-letter">' + LETTERS[pos] + "</span>" +
+        '<span class="option-text">' + esc(q.options[origIdx]) + "</span>" +
+      "</button>";
+    });
+
+    html += "</div>"; // .options
+
+    if (isPractice && !isChecked) {
+      html += '<div style="margin-top:14px;display:flex;justify-content:flex-end;">' +
+        '<button class="btn primary small" data-action="check" data-qid="' + q.id + '"' +
+          (chosen === undefined ? " disabled" : "") + ">✔ Kiểm tra đáp án</button>" +
+      "</div>";
+    }
+
+    if (isChecked) {
+      const ok = chosen === q.correct;
+      html += '<div class="feedback ' + (ok ? "ok" : "no") + '">' +
+        "<strong>" + (ok ? "✅ Chính xác !" : "❌ Chưa đúng") + "</strong>" +
+        "<p>Đáp án đúng: <b>" + esc(q.options[q.correct]) + "</b></p>" +
+        "<p>💡 " + esc(q.explanation) + "</p>" +
+      "</div>";
+    }
+
+    html += "</div>"; // .question-card
+  });
+
+  // Nút điều hướng cho phần II
+  if (isPractice) {
+    html += '<div class="quiz-actions">' +
+      '<button class="btn ghost" data-action="back-to-part1">← Quay lại phần I</button>' +
+      '<button class="btn primary" data-action="home">🏠 Về trang chủ</button>' +
+    "</div>";
+  } else {
+    html += '<div class="quiz-actions">' +
+      '<button class="btn ghost" data-action="back-to-part1">← Quay lại phần I</button>' +
     "</div>" +
     '<div class="quiz-actions second">' +
       '<button class="btn primary block" data-action="submit">📩 Nộp bài</button>' +
     "</div>";
   }
 
-  app.innerHTML = html;
+  return html;
 }
 
 /* ---------- Chọn đáp án ---------- */
 
-function selectOption(origIdx) {
+function selectOption(qid, origIdx) {
   if (!session) return;
-  const item = session.items[session.current];
-  const q = getQuestion(item.qid);
+  if (session.mode === "practice" && session.checked && session.checked[qid]) return;
 
-  if (session.mode === "practice" && session.checked && session.checked[q.id]) return;
-
-  session.answers[q.id] = origIdx;
+  session.answers[qid] = origIdx;
   save(LS.SESSION, session);
 
-  // Cập nhật DOM trực tiếp (không render lại toàn bộ để tránh nhảy trang)
-  document.querySelectorAll(".option").forEach(function (el) {
+  // Cập nhật DOM cho các nút của câu hỏi này
+  document.querySelectorAll('[data-action="select"][data-qid="' + qid + '"]').forEach(function (el) {
     el.classList.toggle("selected", Number(el.dataset.orig) === origIdx);
   });
 
-  const checkBtn = document.querySelector('[data-action="check"]');
+  // Mở khóa nút Kiểm tra (chế độ luyện tập)
+  const checkBtn = document.querySelector('[data-action="check"][data-qid="' + qid + '"]');
   if (checkBtn) checkBtn.disabled = false;
 
   updateProgressUI();
@@ -1034,57 +1146,78 @@ function selectOption(origIdx) {
 
 function updateProgressUI() {
   if (!session) return;
-  const answered = session.items.filter(function (it) {
-    return session.answers[it.qid] !== undefined;
-  }).length;
+  const answered = countAnswered();
   const fill = document.getElementById("progressFill");
   const label = document.getElementById("answeredLabel");
   if (fill) fill.style.width = (answered / TOTAL * 100) + "%";
   if (label) label.innerHTML = "Đã trả lời: <b>" + answered + "</b> / " + TOTAL;
 }
 
-/* ---------- Kiểm tra đáp án (chế độ luyện tập) ---------- */
+/* ---------- Kiểm tra đáp án (chỉ chế độ luyện tập) ---------- */
 
-function checkAnswer() {
+function checkAnswer(qid) {
   if (!session || session.mode !== "practice") return;
-  const item = session.items[session.current];
-  const q = getQuestion(item.qid);
-  const chosen = session.answers[q.id];
+  const q = getQuestion(qid);
+  const chosen = session.answers[qid];
   if (chosen === undefined) return;
+  if (session.checked[qid]) return;
 
-  session.checked[q.id] = true;
+  session.checked[qid] = true;
   save(LS.SESSION, session);
 
-  recordAnswer(q.id, chosen === q.correct);
+  recordAnswer(qid, chosen === q.correct);
 
+  // Ghi nhớ vị trí để tránh nhảy trang
+  const prevScroll = window.scrollY;
   renderQuiz();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // Cố gắng cuộn tới câu vừa kiểm tra (nếu là phần II)
+  const el = document.querySelector('[data-question-id="' + qid + '"]');
+  if (el && session.currentPart === 2) {
+    requestAnimationFrame(function () {
+      const rect = el.getBoundingClientRect();
+      window.scrollBy({ top: rect.top - 80, behavior: "auto" });
+    });
+  } else {
+    window.scrollTo({ top: prevScroll, behavior: "auto" });
+  }
 }
 
-/* ---------- Điều hướng câu ---------- */
+/* ---------- Điều hướng phần I ---------- */
 
 function navigate(dir) {
   if (!session) return;
-  const target = session.current + dir;
+  if (session.currentPart !== 1) return;
 
-  if (target < 0) return;
-
-  if (target >= session.items.length) {
-    if (session.mode === "practice") {
-      alert("🎉 Bạn đã hoàn thành phần luyện tập 28 câu!\nHãy xem lại thống kê để biết những câu mình hay sai nhé.");
-      showView("progress");
-      return;
-    }
+  if (dir === 1 && session.currentIndex === session.part1.length - 1) {
+    // Sang phần II
+    session.currentPart = 2;
+    save(LS.SESSION, session);
+    renderQuiz();
+    window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
 
-  session.current = target;
+  const target = session.currentIndex + dir;
+  if (target < 0 || target >= session.part1.length) return;
+
+  session.currentIndex = target;
   save(LS.SESSION, session);
   renderQuiz();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-/* ---------- Ghi nhận câu trả lời (thống kê) ---------- */
+function goToPart1() {
+  if (!session) return;
+  session.currentPart = 1;
+  // Đặt lại về câu cuối phần I
+  session.currentIndex = session.part1.length - 1;
+  save(LS.SESSION, session);
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ---------- Ghi nhận đáp án (thống kê) ---------- */
 
 function recordAnswer(qid, isCorrect) {
   const stats = load(LS.WRONG, {});
@@ -1111,7 +1244,8 @@ function recordAnswerBatch(list) {
 function submitTest() {
   if (!session || session.mode === "practice") return;
 
-  const unanswered = session.items.filter(function (it) {
+  const allItems = session.part1.concat(session.part2);
+  const unanswered = allItems.filter(function (it) {
     return session.answers[it.qid] === undefined;
   }).length;
 
@@ -1120,7 +1254,7 @@ function submitTest() {
     if (!ok) return;
   }
 
-  const details = session.items.map(function (it) {
+  const details = allItems.map(function (it) {
     const q = getQuestion(it.qid);
     const ans = session.answers[q.id];
     const isAnswered = ans !== undefined;
@@ -1154,7 +1288,6 @@ function submitTest() {
     details: details
   };
 
-  // Lưu lịch sử
   const history = load(LS.HISTORY, []);
   history.push({
     date: result.date,
@@ -1167,12 +1300,10 @@ function submitTest() {
   });
   save(LS.HISTORY, history);
 
-  // Lưu thống kê câu sai
   recordAnswerBatch(details.filter(function (d) { return d.answered; }).map(function (d) {
     return { qid: d.qid, isCorrect: d.isCorrect };
   }));
 
-  // Lưu kết quả
   save(LS.RESULT, result);
   lastResult = result;
 
@@ -1260,33 +1391,34 @@ function renderReview() {
     "<p>28 câu hỏi kèm đáp án đúng và giải thích ngắn gọn bằng tiếng Việt.</p>" +
   "</div>";
 
+  // Phần I
+  const part1 = QUESTIONS.filter(function (q) { return q.part === 1; });
+  const part2 = QUESTIONS.filter(function (q) { return q.part === 2; });
+
+  html += '<div class="part-divider">' +
+    '<span class="line"></span>' +
+    '<span class="label">Partie I · Grammaire &amp; Vocabulaire</span>' +
+    '<span class="line"></span>' +
+  "</div>";
+
+  part1.forEach(function (q) {
+    html += renderReviewCard(q);
+  });
+
+  // Phần II
+  html += '<div class="part-divider">' +
+    '<span class="line"></span>' +
+    '<span class="label">Partie II · Compréhension écrite</span>' +
+    '<span class="line"></span>' +
+  "</div>";
+
   html += '<details class="passage" open>' +
     "<summary>📖 Texte : Vũng Tàu – une belle ville au bord de la mer</summary>" +
     '<div class="passage-body">' + READING_HTML + "</div>" +
   "</details>";
 
-  const letters = ["A", "B", "C", "D"];
-
-  QUESTIONS.forEach(function (q) {
-    html += '<div class="review-card">' +
-      '<div class="review-head">' +
-        '<span class="badge">Câu ' + q.id + "</span>" +
-        '<span class="pill part">' + (q.part === 1 ? "Partie I · Grammaire & Vocabulaire" : "Partie II · Compréhension écrite") + "</span>" +
-      "</div>" +
-      '<p class="review-q">' + esc(q.question) + "</p>" +
-      '<ul class="review-options">';
-
-    q.options.forEach(function (opt, i) {
-      html += '<li class="' + (i === q.correct ? "correct" : "") + '">' +
-        '<span class="option-letter">' + letters[i] + "</span>" +
-        "<span>" + esc(opt) + "</span>" +
-        (i === q.correct ? '<span class="check">✔</span>' : "") +
-      "</li>";
-    });
-
-    html += "</ul>" +
-      '<p class="exp">💡 ' + esc(q.explanation) + "</p>" +
-    "</div>";
+  part2.forEach(function (q) {
+    html += renderReviewCard(q);
   });
 
   html += '<div class="page-actions">' +
@@ -1294,6 +1426,30 @@ function renderReview() {
   "</div>";
 
   app.innerHTML = html;
+}
+
+function renderReviewCard(q) {
+  let html = '<div class="review-card">' +
+    '<div class="review-head">' +
+      '<span class="badge">Câu ' + q.id + "</span>" +
+      '<span class="pill part">' + (q.part === 1 ? "Partie I" : "Partie II") + "</span>" +
+    "</div>" +
+    '<p class="review-q">' + esc(q.question) + "</p>" +
+    '<ul class="review-options">';
+
+  q.options.forEach(function (opt, i) {
+    html += '<li class="' + (i === q.correct ? "correct" : "") + '">' +
+      '<span class="option-letter">' + LETTERS[i] + "</span>" +
+      "<span>" + esc(opt) + "</span>" +
+      (i === q.correct ? '<span class="check">✔</span>' : "") +
+    "</li>";
+  });
+
+  html += "</ul>" +
+    '<p class="exp">💡 ' + esc(q.explanation) + "</p>" +
+  "</div>";
+
+  return html;
 }
 
 /* ============================================================
@@ -1325,7 +1481,6 @@ function renderProgress() {
     '<div class="big-stat"><b>' + totalDone + "</b><span>Tổng câu đã làm</span></div>" +
   "</div>";
 
-  // Câu hỏi thường trả lời sai
   html += '<h3 class="section-title">⚠️ Những câu bạn thường trả lời sai</h3>';
 
   const wrongList = Object.keys(stats)
@@ -1348,7 +1503,6 @@ function renderProgress() {
     });
   }
 
-  // Lịch sử làm bài
   html += '<h3 class="section-title">🕘 Lịch sử làm bài</h3>';
 
   if (history.length === 0) {
