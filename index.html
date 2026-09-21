@@ -1,1824 +1,1396 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>French A1 Learning &amp; Quiz</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>French A1 Quiz – Kiểm tra tiếng Pháp A1</title>
 <style>
   :root{
-    --bg1:#eef5fd; --bg2:#e1eefb; --card:#ffffff;
-    --primary:#6ba3e0; --primary-d:#4c88cc; --primary-l:#dceafa;
-    --text:#2c3e50; --muted:#6b7f95; --border:#d6e4f2;
-    --ok:#5cb385; --ok-bg:#e7f7ef;
-    --no:#e08585; --no-bg:#fdeceb;
-    --warn:#dda644; --warn-bg:#fdf4e3;
-    --radius:14px; --shadow:0 4px 18px rgba(107,163,224,.14);
+    --bg:#eef5fd;
+    --card:#ffffff;
+    --primary:#4a86c8;
+    --primary-dark:#35679e;
+    --primary-soft:#e4effb;
+    --border:#d8e7f7;
+    --text:#22384f;
+    --muted:#7690aa;
+    --green:#2f9e6a;
+    --green-soft:#e4f7ed;
+    --red:#d9534f;
+    --red-soft:#fdeceb;
+    --amber:#c98a1b;
+    --amber-soft:#fdf4e3;
+    --radius:16px;
+    --shadow:0 4px 18px rgba(74,134,200,.10);
   }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
-    background:linear-gradient(165deg,var(--bg1) 0%,var(--bg2) 100%);
-    background-attachment:fixed; color:var(--text);
-    min-height:100vh; line-height:1.55; font-size:16px;
-    -webkit-text-size-adjust:100%;
+    font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",Arial,sans-serif;
+    background-color:#eef5fd;
+    background-image:
+      radial-gradient(circle at 8% 0%, #e2eefc 0%, rgba(226,238,252,0) 45%),
+      radial-gradient(circle at 92% 8%, #e7f1fd 0%, rgba(231,241,253,0) 42%);
+    color:var(--text);
+    min-height:100vh;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
   }
-  .topbar{
-    position:sticky;top:0;z-index:60;
-    background:rgba(255,255,255,.94);
-    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+
+  /* ---------- HEADER ---------- */
+  .app-header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.93);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
     border-bottom:1px solid var(--border);
   }
-  .topbar-inner{
-    max-width:980px;margin:0 auto;padding:10px 14px;
-    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  .header-inner{
+    max-width:900px;margin:0 auto;padding:10px 16px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
   }
-  .brand{
-    font-weight:800;color:var(--primary-d);font-size:1rem;
-    letter-spacing:.2px;white-space:nowrap;display:flex;align-items:center;gap:7px;
+  .brand{display:flex;align-items:center;gap:10px;min-width:0;}
+  .logo{font-size:26px;line-height:1;}
+  .brand-text h1{font-size:17px;margin:0;color:var(--primary-dark);letter-spacing:.2px;}
+  .brand-text span{font-size:11.5px;color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tabs{display:flex;gap:6px;flex-shrink:0;}
+  .tab{
+    border:1px solid var(--border);background:#fff;color:#5c7characters;
+    color:#5c7d9e;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;
+    cursor:pointer;transition:.18s;font-family:inherit;
   }
-  .brand .logo{
-    width:26px;height:26px;border-radius:8px;
-    background:linear-gradient(135deg,#9cc8f0,#6ba3e0);
-    display:inline-flex;align-items:center;justify-content:center;
-    color:#fff;font-size:.8rem;font-weight:800;
-  }
-  .nav{
-    display:flex;gap:4px;overflow-x:auto;flex:1;
-    -webkit-overflow-scrolling:touch;scrollbar-width:none;
-  }
-  .nav::-webkit-scrollbar{display:none;}
-  .nav button{
-    border:none;background:transparent;color:var(--muted);
-    font:inherit;font-size:.88rem;font-weight:600;
-    padding:8px 13px;border-radius:10px;cursor:pointer;
-    white-space:nowrap;transition:.18s;
-  }
-  .nav button:hover{background:var(--primary-l);color:var(--primary-d);}
-  .nav button.active{background:var(--primary);color:#fff;}
+  .tab:hover{background:var(--primary-soft);}
+  .tab.active{background:var(--primary);border-color:var(--primary);color:#fff;}
 
-  main{max-width:980px;margin:0 auto;padding:18px 14px 60px;}
-  .view{display:none;}
-  .view.active{display:block;animation:fade .28s ease;}
-  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
-
-  .card{
-    background:var(--card);border-radius:var(--radius);
-    box-shadow:var(--shadow);padding:20px;margin-bottom:16px;
-    border:1px solid rgba(214,228,242,.7);
+  /* ---------- LAYOUT ---------- */
+  .container{max-width:900px;margin:0 auto;padding:20px 16px 60px;}
+  .app-footer{
+    text-align:center;color:var(--muted);font-size:12px;
+    padding:18px 16px 30px;
   }
-  h1{font-size:1.6rem;margin:0 0 8px;color:var(--primary-d);letter-spacing:-.3px;}
-  h2{font-size:1.22rem;margin:0 0 10px;color:var(--primary-d);}
-  h3{font-size:1.05rem;margin:0 0 10px;color:var(--primary-d);}
-  p{margin:0 0 12px;}
-  .lead{color:var(--muted);font-size:1rem;}
-  .muted{color:var(--muted);}
-  .small{font-size:.85rem;}
 
+  /* ---------- HERO ---------- */
+  .hero{
+    background:linear-gradient(135deg,#f7fbff 0%,#e8f2fd 100%);
+    border:1px solid var(--border);border-radius:var(--radius);
+    padding:26px 22px;margin-bottom:20px;box-shadow:var(--shadow);
+  }
+  .hero h2{margin:0 0 6px;font-size:22px;color:var(--primary-dark);}
+  .hero p{margin:0;color:#5b7893;font-size:14px;}
+  .hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .hero-badges span{
+    background:#fff;border:1px solid var(--border);border-radius:999px;
+    padding:5px 12px;font-size:12px;color:#5c7d9e;font-weight:600;
+  }
+
+  /* ---------- RESUME BANNER ---------- */
+  .resume{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    background:var(--amber-soft);border:1px solid #f2dfb4;border-radius:var(--radius);
+    padding:14px 18px;margin-bottom:20px;
+  }
+  .resume p{margin:0;font-size:13.5px;color:#8a6415;}
+  .resume b{color:#7a5510;}
+
+  /* ---------- MODE CARDS ---------- */
+  .mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;}
+  .mode-card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+    transition:transform .18s, box-shadow .18s;
+  }
+  .mode-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(74,134,200,.16);}
+  .mode-icon{font-size:28px;margin-bottom:8px;}
+  .mode-card h3{margin:0 0 6px;font-size:16px;color:var(--primary-dark);}
+  .mode-card p{margin:0 0 16px;font-size:13px;color:#69839c;flex:1;}
+  .mode-card .btn{align-self:flex-start;}
+
+  /* ---------- BUTTONS ---------- */
   .btn{
-    display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    border:none;border-radius:12px;padding:12px 20px;
-    font:inherit;font-weight:700;font-size:.95rem;
-    cursor:pointer;transition:.18s;background:var(--primary);color:#fff;
-    min-height:48px;text-decoration:none;
+    font-family:inherit;font-size:14px;font-weight:600;border-radius:12px;
+    padding:10px 18px;cursor:pointer;border:1px solid transparent;transition:.18s;
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
   }
-  .btn:hover{background:var(--primary-d);transform:translateY(-1px);}
-  .btn:active{transform:translateY(0);}
-  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;}
-  .btn.ghost{background:#fff;color:var(--primary-d);border:1.5px solid var(--border);}
-  .btn.ghost:hover{background:var(--primary-l);border-color:var(--primary);}
-  .btn.subtle{background:var(--primary-l);color:var(--primary-d);}
-  .btn.subtle:hover{background:#c9dff6;}
-  .btn.danger{background:#fff;color:#c96a6a;border:1.5px solid #f0cccc;}
-  .btn.danger:hover{background:#fdeceb;}
-  .btn.sm{padding:9px 15px;min-height:40px;font-size:.88rem;border-radius:10px;}
-  .btn.full{width:100%;}
+  .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary);}
+  .btn.primary:hover{background:var(--primary-dark);border-color:var(--primary-dark);}
+  .btn.ghost{background:#fff;color:#4a7aa8;border-color:var(--border);}
+  .btn.ghost:hover{background:var(--primary-soft);}
+  .btn.danger{background:#fff;color:var(--red);border-color:#f2c9c7;}
+  .btn.danger:hover{background:var(--red-soft);}
+  .btn.block{width:100%;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none !important;}
+  .btn.small{font-size:12.5px;padding:7px 13px;border-radius:10px;}
 
-  .hero{background:linear-gradient(135deg,#ffffff 0%,#f2f8ff 100%);}
-  .hero-stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;}
-  .stat{
-    flex:1 1 120px;background:#fff;border:1px solid var(--border);
-    border-radius:12px;padding:12px;text-align:center;
-  }
-  .stat b{display:block;font-size:1.5rem;color:var(--primary-d);line-height:1.2;}
-  .stat span{font-size:.8rem;color:var(--muted);}
-
-  .home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
-  .home-card{
-    background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);
-    padding:18px;text-align:left;cursor:pointer;font:inherit;
-    transition:.2s;box-shadow:var(--shadow);display:block;
-  }
-  .home-card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 8px 22px rgba(107,163,224,.22);}
-  .home-card .hc-icon{font-size:1.5rem;display:block;margin-bottom:6px;}
-  .home-card .hc-title{display:block;font-weight:700;color:var(--primary-d);margin-bottom:3px;}
-  .home-card .hc-sub{display:block;font-size:.84rem;color:var(--muted);}
-
-  .notice{
-    border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:.9rem;
-    border:1.5px solid;
-  }
-  .notice.warn{background:var(--warn-bg);border-color:#f0d9a8;color:#8a6620;}
-  .notice.info{background:var(--primary-l);border-color:#bcd8f4;color:#35648f;}
-  .notice code{
-    background:rgba(255,255,255,.75);padding:1px 5px;border-radius:5px;
-    font-size:.85em;font-family:ui-monospace,Menlo,Consolas,monospace;
-  }
-
-  .question-card{padding:20px;}
-  .qmeta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
+  /* ---------- QUIZ ---------- */
+  .quiz-top{margin-bottom:14px;}
+  .quiz-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
   .pill{
-    display:inline-block;background:var(--primary-l);color:var(--primary-d);
-    border-radius:99px;padding:4px 12px;font-size:.78rem;font-weight:700;
+    font-size:11.5px;font-weight:700;letter-spacing:.3px;
+    background:var(--primary-soft);color:var(--primary-dark);
+    border-radius:999px;padding:4px 11px;
   }
-  .pill-read{background:#e5f4ec;color:#3f8a66;}
-  .pill-topic{background:#f2f0fb;color:#6b5fb0;font-weight:600;}
-  .qtext{
-    font-size:1.12rem;font-weight:600;color:#22384d;
-    margin:0 0 16px;line-height:1.6;
+  .pill.part{background:#f0f6fd;color:#6d8aa6;}
+  .quiz-counter{font-size:14px;color:#5c7d9e;margin-bottom:8px;}
+  .quiz-counter b{color:var(--primary-dark);font-size:16px;}
+  .progress{
+    height:9px;background:#e2eefb;border-radius:999px;overflow:hidden;
   }
-  .options{display:flex;flex-direction:column;}
+  .progress-fill{
+    height:100%;background:linear-gradient(90deg,#7fb2e5,#4a86c8);
+    border-radius:999px;transition:width .3s ease;width:0;
+  }
+  .answered-label{font-size:12px;color:var(--muted);margin-top:6px;text-align:right;}
+
+  .question-card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:22px;box-shadow:var(--shadow);margin-bottom:16px;
+  }
+  .question-text{
+    font-size:17px;font-weight:600;color:#1f3characters;
+    color:#1f3550;margin:0 0 18px;line-height:1.6;
+  }
+  .options{display:flex;flex-direction:column;gap:10px;}
   .option{
     display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;
-    background:#fff;border:1.5px solid var(--border);border-radius:12px;
-    padding:13px 15px;font:inherit;font-size:.98rem;color:var(--text);
-    cursor:pointer;transition:.15s;margin-bottom:10px;min-height:52px;
+    background:#f8fbff;border:1.5px solid var(--border);border-radius:13px;
+    padding:13px 15px;cursor:pointer;font-family:inherit;font-size:15px;
+    color:var(--text);transition:.16s;line-height:1.5;
   }
-  .option:last-child{margin-bottom:0;}
-  .option:hover{border-color:var(--primary);background:#f8fbff;}
-  .option.selected{border-color:var(--primary);background:var(--primary-l);box-shadow:0 0 0 3px rgba(107,163,224,.16);}
-  .option.correct{border-color:var(--ok);background:var(--ok-bg);box-shadow:none;}
-  .option.incorrect{border-color:var(--no);background:var(--no-bg);box-shadow:none;}
-  .option.disabled{cursor:default;}
-  .option.disabled:hover{border-color:var(--border);background:#fff;}
-  .option.disabled.correct:hover{border-color:var(--ok);background:var(--ok-bg);}
-  .option.disabled.incorrect:hover{border-color:var(--no);background:var(--no-bg);}
-  .letter{
-    flex:0 0 28px;height:28px;border-radius:50%;background:var(--primary-l);
-    color:var(--primary-d);display:flex;align-items:center;justify-content:center;
-    font-weight:800;font-size:.82rem;transition:.15s;
+  .option:hover:not(:disabled){border-color:#a9cdec;background:#f1f8ff;}
+  .option.selected{
+    border-color:var(--primary);background:var(--primary-soft);
+    box-shadow:0 0 0 3px rgba(74,134,200,.12);
   }
-  .option.selected .letter{background:var(--primary);color:#fff;}
-  .option.correct .letter{background:var(--ok);color:#fff;}
-  .option.incorrect .letter{background:var(--no);color:#fff;}
-  .opt-text{flex:1;padding-top:2px;}
-
-  .progress-bar{height:8px;background:#e6effa;border-radius:99px;overflow:hidden;margin:10px 0 6px;}
-  .progress-bar span{
-    display:block;height:100%;width:0;
-    background:linear-gradient(90deg,#9cc8f0,#6ba3e0);
-    border-radius:99px;transition:width .3s ease;
+  .option.correct{
+    border-color:#8fd8b4;background:var(--green-soft);
   }
-
-  .exam-nav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
-  .exam-nav .btn{flex:1 1 140px;}
-  .btn.flagged{background:var(--warn-bg);color:#a97b1e;border-color:#f0d9a8;}
-  .exam-actions{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
-  .exam-actions .btn{flex:1 1 180px;}
-
-  .palette-card{padding:16px;}
-  .palette-title{font-weight:700;color:var(--primary-d);font-size:.92rem;margin-bottom:10px;}
-  .palette{display:flex;flex-wrap:wrap;gap:6px;}
-  .palette-item{
-    width:38px;height:38px;border-radius:10px;border:1.5px solid var(--border);
-    background:#fff;color:var(--muted);font:inherit;font-weight:700;
-    font-size:.8rem;cursor:pointer;transition:.15s;padding:0;
+  .option.wrong{
+    border-color:#f0b3b0;background:var(--red-soft);
   }
-  .palette-item:hover{border-color:var(--primary);}
-  .palette-item.answered{background:var(--primary-l);color:var(--primary-d);border-color:#bcd8f4;}
-  .palette-item.flagged{background:var(--warn-bg);border-color:#f0d9a8;color:#a97b1e;}
-  .palette-item.current{outline:3px solid rgba(107,163,224,.4);outline-offset:1px;}
-  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:.78rem;color:var(--muted);}
-  .legend span{display:flex;align-items:center;gap:6px;}
-  .dot{width:12px;height:12px;border-radius:4px;display:inline-block;border:1.5px solid var(--border);}
-  .dot.answered{background:var(--primary-l);border-color:#bcd8f4;}
-  .dot.flagged{background:var(--warn-bg);border-color:#f0d9a8;}
-  .dot.current{background:#fff;outline:2px solid rgba(107,163,224,.5);outline-offset:1px;}
+  .option:disabled{cursor:default;}
+  .option-letter{
+    flex-shrink:0;width:26px;height:26px;border-radius:8px;
+    background:#e4effb;color:var(--primary-dark);
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:12.5px;font-weight:800;
+  }
+  .option.selected .option-letter{background:var(--primary);color:#fff;}
+  .option.correct .option-letter{background:var(--green);color:#fff;}
+  .option.wrong .option-letter{background:var(--red);color:#fff;}
+  .option-text{flex:1;padding-top:2px;}
 
-  .passage-wrap{margin-bottom:14px;}
+  /* ---------- PASSAGE ---------- */
   .passage{
-    display:none;margin-top:10px;background:#f8fbff;border:1.5px dashed #c5dcf3;
-    border-radius:12px;padding:16px;font-size:.94rem;line-height:1.75;color:#31485e;
+    background:#f7fbff;border:1px solid var(--border);border-radius:var(--radius);
+    margin-bottom:16px;overflow:hidden;
   }
-  .passage.open{display:block;}
+  .passage summary{
+    cursor:pointer;padding:14px 18px;font-weight:700;font-size:13.5px;
+    color:var(--primary-dark);list-style:none;user-select:none;
+  }
+  .passage summary::-webkit-details-marker{display:none;}
+  .passage summary::after{content:"▾";float:right;color:var(--muted);}
+  .passage[open] summary::after{content:"▴";}
+  .passage-body{
+    padding:0 18px 18px;font-size:14.5px;color:#33506d;line-height:1.75;
+    border-top:1px solid var(--border);padding-top:14px;
+  }
+  .passage-body p{margin:0 0 10px;}
 
-  .feedback{border-radius:12px;padding:16px;margin-top:16px;border:1.5px solid;font-size:.94rem;}
-  .feedback.fb-ok{background:var(--ok-bg);border-color:#bfe5d1;}
-  .feedback.fb-no{background:var(--no-bg);border-color:#f2cfcf;}
-  .fb-head{font-weight:800;margin-bottom:10px;font-size:1rem;}
-  .fb-ok .fb-head{color:#3f8a66;}
-  .fb-no .fb-head{color:#c06565;}
-  .fb-row{margin-bottom:8px;line-height:1.65;}
-  .fb-row:last-child{margin-bottom:0;}
-  .fb-row b{color:#2c3e50;}
+  /* ---------- FEEDBACK ---------- */
+  .feedback{
+    margin-top:16px;border-radius:13px;padding:14px 16px;font-size:14px;
+    border:1px solid;
+  }
+  .feedback.ok{background:var(--green-soft);border-color:#b7e6cd;color:#1f7a51;}
+  .feedback.no{background:var(--red-soft);border-color:#f4c8c5;color:#a53f3b;}
+  .feedback strong{display:block;margin-bottom:6px;font-size:15px;}
+  .feedback p{margin:4px 0;}
 
-  .score-hero{text-align:center;padding:26px 20px;}
-  .score-big{font-size:3rem;font-weight:800;color:var(--primary-d);line-height:1;margin-bottom:6px;}
-  .score-sub{color:var(--muted);font-size:.95rem;}
-  .result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:20px;}
-  .result-box{background:#f8fbff;border:1.5px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
-  .result-box b{display:block;font-size:1.4rem;color:var(--primary-d);line-height:1.2;}
-  .result-box span{font-size:.8rem;color:var(--muted);}
-  .result-box.ok b{color:var(--ok);}
-  .result-box.no b{color:var(--no);}
-  .result-box.skip b{color:var(--warn);}
+  /* ---------- ACTIONS ---------- */
+  .quiz-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .quiz-actions .btn{flex:1;min-width:130px;}
+  .quiz-actions.second{margin-top:10px;}
 
-  .review-item{
-    border:1.5px solid var(--border);border-radius:12px;padding:16px;
-    margin-bottom:12px;background:#fff;
+  /* ---------- RESULT ---------- */
+  .result-hero{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:26px 22px;box-shadow:var(--shadow);margin-bottom:20px;
+    display:flex;align-items:center;gap:28px;flex-wrap:wrap;justify-content:center;
   }
-  .review-item.r-ok{border-left:5px solid var(--ok);}
-  .review-item.r-no{border-left:5px solid var(--no);}
-  .review-item.r-skip{border-left:5px solid var(--warn);}
-  .review-head{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
-  .badge{border-radius:99px;padding:3px 11px;font-size:.76rem;font-weight:800;}
-  .badge.ok{background:var(--ok-bg);color:#3f8a66;}
-  .badge.no{background:var(--no-bg);color:#c06565;}
-  .badge.skip{background:var(--warn-bg);color:#a97b1e;}
-  .ans-line{padding:9px 12px;border-radius:9px;margin-bottom:7px;font-size:.92rem;background:#f6f9fd;}
-  .ans-line.correct{background:var(--ok-bg);}
-  .ans-line.wrong{background:var(--no-bg);}
-  .explain-box{
-    background:#f8fbff;border-left:3px solid var(--primary);
-    border-radius:0 9px 9px 0;padding:10px 13px;font-size:.9rem;
-    margin-top:9px;color:#3c5570;line-height:1.65;
+  .score-circle{
+    width:138px;height:138px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;position:relative;
+  }
+  .score-circle::before{
+    content:"";position:absolute;inset:11px;background:#fff;border-radius:50%;
+  }
+  .score-inner{position:relative;text-align:center;}
+  .score-num{display:block;font-size:32px;font-weight:800;color:var(--primary-dark);line-height:1.1;}
+  .score-den{display:block;font-size:12.5px;color:var(--muted);font-weight:600;}
+  .result-stats{display:grid;grid-template-columns:repeat(2,minmax(96px,1fr));gap:10px;flex:1;min-width:220px;}
+  .stat{
+    border-radius:13px;padding:12px 14px;text-align:center;border:1px solid var(--border);
+    background:#f8fbff;
+  }
+  .stat b{display:block;font-size:22px;line-height:1.2;}
+  .stat span{font-size:12px;color:var(--muted);font-weight:600;}
+  .stat.ok b{color:var(--green);}
+  .stat.no b{color:var(--red);}
+  .stat.na b{color:var(--amber);}
+  .stat.pc b{color:var(--primary-dark);}
+
+  .section-title{
+    font-size:16px;color:var(--primary-dark);margin:26px 0 12px;font-weight:700;
   }
 
-  .practice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px;}
-  .practice-card{
-    background:#fff;border:1.5px solid var(--border);border-radius:12px;
-    padding:16px;text-align:left;cursor:pointer;font:inherit;transition:.18s;
+  .detail{
+    background:var(--card);border:1px solid var(--border);border-left:5px solid var(--border);
+    border-radius:13px;padding:16px 18px;margin-bottom:12px;
   }
-  .practice-card:hover{border-color:var(--primary);background:#f8fbff;transform:translateY(-2px);}
-  .practice-card:disabled{opacity:.45;cursor:not-allowed;transform:none;}
-  .pc-title{display:block;font-weight:700;color:var(--primary-d);margin-bottom:4px;}
-  .pc-sub{display:block;font-size:.83rem;color:var(--muted);}
-  .settings{
-    background:#f8fbff;border-radius:12px;padding:14px 16px;
-    display:flex;gap:20px;flex-wrap:wrap;font-size:.9rem;
+  .detail.ok{border-left-color:#8fd8b4;}
+  .detail.no{border-left-color:#f0b3b0;}
+  .detail.na{border-left-color:#f0d9a8;}
+  .detail-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+  .badge{
+    background:var(--primary-soft);color:var(--primary-dark);border-radius:8px;
+    padding:3px 10px;font-size:12px;font-weight:800;
   }
-  .settings label{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
-  .settings input[type=checkbox]{width:18px;height:18px;accent-color:var(--primary);cursor:pointer;}
+  .tag{font-size:11.5px;font-weight:800;border-radius:999px;padding:3px 10px;}
+  .tag.ok{background:var(--green-soft);color:var(--green);}
+  .tag.no{background:var(--red-soft);color:var(--red);}
+  .tag.na{background:var(--amber-soft);color:var(--amber);}
+  .detail-q{margin:0 0 10px;font-size:14.5px;font-weight:600;color:#1f3550;}
+  .detail-line{margin:5px 0;font-size:13.5px;color:#4b6a87;}
+  .detail-line .lbl{color:var(--muted);font-weight:600;}
+  .detail-line b{color:#1f3550;}
+  .exp{
+    margin:10px 0 0;font-size:13px;color:#5c7d9e;background:#f6faff;
+    border-radius:10px;padding:10px 12px;border:1px solid #e6f1fb;
+  }
 
-  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:520px;}
-  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);}
-  th{background:#f4f9ff;color:var(--primary-d);font-weight:700;font-size:.82rem;}
-  tr:last-child td{border-bottom:none;}
-  .empty-state{text-align:center;padding:26px 16px;color:var(--muted);font-size:.92rem;}
+  /* ---------- REVIEW ---------- */
+  .page-head{margin-bottom:18px;}
+  .page-head h2{margin:0 0 5px;font-size:20px;color:var(--primary-dark);}
+  .page-head p{margin:0;font-size:13.5px;color:var(--muted);}
+  .review-card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(74,134,200,.06);
+  }
+  .review-head{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+  .review-q{margin:0 0 12px;font-size:15px;font-weight:600;color:#1f3550;}
+  .review-options{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;}
+  .review-options li{
+    display:flex;align-items:center;gap:10px;font-size:14px;color:#4b6a87;
+    background:#f8fbff;border:1px solid var(--border);border-radius:11px;padding:9px 13px;
+  }
+  .review-options li.correct{
+    background:var(--green-soft);border-color:#b7e6cd;color:#1f7a51;font-weight:700;
+  }
+  .review-options .check{margin-left:auto;color:var(--green);font-weight:800;}
 
-  .modal-backdrop{
-    position:fixed;inset:0;background:rgba(44,62,80,.42);
-    display:none;align-items:center;justify-content:center;
-    z-index:200;padding:20px;
+  /* ---------- PROGRESS PAGE ---------- */
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:8px;}
+  .big-stat{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px;text-align:center;box-shadow:var(--shadow);
   }
-  .modal-backdrop.open{display:flex;}
-  .modal-box{
-    background:#fff;border-radius:16px;padding:22px;max-width:440px;width:100%;
-    box-shadow:0 18px 50px rgba(44,62,80,.28);animation:pop .2s ease;
-  }
-  @keyframes pop{from{transform:scale(.94);opacity:0;}to{transform:scale(1);opacity:1;}}
-  .modal-box h3{margin-bottom:10px;}
-  .modal-body{font-size:.94rem;color:#3c5570;margin-bottom:18px;line-height:1.6;}
-  .modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;}
-  .modal-actions .btn{flex:0 1 auto;min-width:110px;}
+  .big-stat b{display:block;font-size:26px;color:var(--primary-dark);line-height:1.2;}
+  .big-stat span{font-size:12.5px;color:var(--muted);font-weight:600;}
 
-  @media (max-width:640px){
-    main{padding:14px 10px 50px;}
-    .card{padding:16px;}
-    h1{font-size:1.35rem;}
-    h2{font-size:1.1rem;}
-    .qtext{font-size:1.03rem;}
-    .option{font-size:.94rem;padding:12px 13px;}
-    .topbar-inner{padding:8px 10px;gap:8px;}
-    .brand{font-size:.9rem;}
-    .nav button{font-size:.82rem;padding:7px 10px;}
-    .palette-item{width:34px;height:34px;font-size:.76rem;}
-    .exam-nav .btn, .exam-actions .btn{flex:1 1 100%;}
-    .score-big{font-size:2.5rem;}
+  .history-row{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:12px 16px;margin-bottom:9px;font-size:13.5px;flex-wrap:wrap;
   }
-  @media (max-width:380px){
-    .palette-item{width:30px;height:30px;font-size:.72rem;}
+  .history-row .date{color:var(--muted);font-size:12.5px;}
+  .history-row .score{font-weight:800;color:var(--primary-dark);font-size:15px;}
+
+  .wrong-item{
+    background:var(--card);border:1px solid var(--border);border-left:5px solid #f0b3b0;
+    border-radius:12px;padding:14px 16px;margin-bottom:10px;
+  }
+  .wrong-item .q{font-size:14px;font-weight:600;margin:0 0 6px;color:#1f3550;}
+  .wrong-item .meta{font-size:12.5px;color:var(--muted);}
+  .wrong-item .meta b{color:var(--green);}
+
+  .empty{
+    background:var(--card);border:1px dashed var(--border);border-radius:var(--radius);
+    padding:32px 20px;text-align:center;color:var(--muted);font-size:14px;
+  }
+
+  .page-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;}
+
+  @media (max-width:560px){
+    .brand-text span{display:none;}
+    .hero h2{font-size:19px;}
+    .question-text{font-size:16px;}
+    .option{font-size:14.5px;padding:12px 13px;}
+    .result-hero{gap:18px;}
+    .score-circle{width:118px;height:118px;}
+    .score-num{font-size:27px;}
+    .result-stats{grid-template-columns:repeat(2,1fr);}
   }
 </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand"><span class="logo">FR</span> French A1 Learning &amp; Quiz</div>
-    <nav class="nav" id="mainNav">
-      <button data-view="home" class="active">Trang chủ</button>
-      <button data-view="exam">Thi thử</button>
-      <button data-view="practice">Luyện tập</button>
-      <button data-view="results">Kết quả</button>
-      <button data-view="progress">Tiến độ</button>
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="logo">🇫🇷</div>
+      <div class="brand-text">
+        <h1>French A1 Quiz</h1>
+        <span>Grammaire · Vocabulaire · Compréhension écrite</span>
+      </div>
+    </div>
+    <nav class="tabs">
+      <button class="tab active" data-view="home">Trang chủ</button>
+      <button class="tab" data-view="progress">Thống kê</button>
     </nav>
   </div>
 </header>
 
-<main>
-  <section class="view active" id="view-home">
-    <div class="card hero">
-      <h1>French A1 Learning &amp; Quiz</h1>
-      <p class="lead">Ứng dụng ôn luyện tiếng Pháp trình độ A1 với hai chế độ: <b>Thi thử</b> (không giới hạn thời gian) và <b>Luyện tập</b> (phản hồi và giải thích ngay sau mỗi câu).</p>
-      <div class="hero-stats">
-        <div class="stat"><b id="homeTotal">0</b><span>Câu hỏi</span></div>
-        <div class="stat"><b id="homeGv">0</b><span>Ngữ pháp + Từ vựng</span></div>
-        <div class="stat"><b id="homeRead">0</b><span>Đọc hiểu</span></div>
-      </div>
-    </div>
+<main class="container" id="app"></main>
 
-    <div class="home-grid">
-      <button class="home-card" data-action="exam">
-        <span class="hc-icon">📝</span>
-        <span class="hc-title">Bắt đầu thi thử</span>
-        <span class="hc-sub">Đề thi đầy đủ, xáo trộn câu hỏi và đáp án mỗi lần làm.</span>
-      </button>
-      <button class="home-card" data-action="practice-gv">
-        <span class="hc-icon">🔤</span>
-        <span class="hc-title">Luyện tập Ngữ pháp + Từ vựng</span>
-        <span class="hc-sub">Chọn đáp án và xem giải thích tiếng Việt ngay lập tức.</span>
-      </button>
-      <button class="home-card" data-action="practice-reading">
-        <span class="hc-icon">📖</span>
-        <span class="hc-title">Luyện tập Đọc hiểu</span>
-        <span class="hc-sub">Bài đọc Vũng Tàu kèm dẫn chứng trong bài.</span>
-      </button>
-      <button class="home-card" data-action="practice-all">
-        <span class="hc-icon">🎯</span>
-        <span class="hc-title">Luyện tập tất cả câu hỏi</span>
-        <span class="hc-sub">Luyện một lượt toàn bộ ngân hàng câu hỏi hiện có.</span>
-      </button>
-      <button class="home-card" data-action="progress">
-        <span class="hc-icon">📊</span>
-        <span class="hc-title">Xem tiến độ học tập</span>
-        <span class="hc-sub">Lịch sử làm bài, điểm số và các câu trả lời sai.</span>
-      </button>
-    </div>
-  </section>
-
-  <section class="view" id="view-exam">
-    <div id="examIntro"></div>
-    <div id="examRunner"></div>
-  </section>
-
-  <section class="view" id="view-practice">
-    <div id="practiceMenu"></div>
-    <div id="practiceRunner"></div>
-  </section>
-
-  <section class="view" id="view-results">
-    <div id="resultsContent"></div>
-  </section>
-
-  <section class="view" id="view-progress">
-    <div id="progressContent"></div>
-  </section>
-</main>
-
-<div class="modal-backdrop" id="modal">
-  <div class="modal-box">
-    <h3 id="modalTitle"></h3>
-    <div class="modal-body" id="modalBody"></div>
-    <div class="modal-actions">
-      <button class="btn ghost sm" id="modalCancel">Hủy</button>
-      <button class="btn sm" id="modalOk">Đồng ý</button>
-    </div>
-  </div>
-</div>
+<footer class="app-footer">
+  French A1 Quiz · 28 câu hỏi · Bonne chance ! 🍀
+</footer>
 
 <script>
-/* =====================================================================
-   PHẦN 1 — DỮ LIỆU
-   ===================================================================== */
+/* ============================================================
+   1. DỮ LIỆU ĐỀ THI (28 CÂU – NGUYÊN BẢN)
+   ============================================================ */
 
-const READING_PASSAGE = `Vũng Tàu – une belle ville au bord de la mer
+const READING_HTML = `
+  <p><strong>Vũng Tàu – une belle ville au bord de la mer</strong></p>
+  <p>Vũng Tàu est une belle ville du sud du Vietnam. Elle est au bord de la mer. C’est une destination très connue pour les touristes. À Vũng Tàu, il y a de belles plages. Les touristes aiment se promener au bord de la mer, se baigner et regarder le coucher du soleil.</p>
+  <p>La ville possède aussi plusieurs lieux historiques. On peut visiter un musée pour découvrir l’histoire de Vũng Tàu. Un monument intéressant est la tour Tam Thắng. Elle est située près de la mer. Elle est un symbole de la ville.</p>
+  <p>On peut aussi visiter le Palais Blanc. C’est un ancien bâtiment construit sur la montagne Tao Phùng. À l’époque coloniale, le gouverneur général Paul Doumer y a séjourné. Aujourd’hui, le Palais Blanc est un lieu historique et touristique.</p>
+  <p>Vũng Tàu est donc une ville intéressante. On peut y découvrir la mer, les plages, les montagnes, les musées et les monuments historiques. C’est une belle destination pour un voyage au Vietnam.</p>
+`;
 
-Vũng Tàu est une belle ville du sud du Vietnam. Elle est au bord de la mer. C'est une destination très connue pour les touristes. À Vũng Tàu, il y a de belles plages. Les touristes aiment se promener au bord de la mer, se baigner et regarder le coucher du soleil.
-
-La ville possède aussi plusieurs lieux historiques. On peut visiter un musée pour découvrir l'histoire de Vũng Tàu. Un monument intéressant est la tour Tam Thắng. Elle est située près de la mer. Elle est un symbole de la ville.
-
-On peut aussi visiter le Palais Blanc. C'est un ancien bâtiment construit sur la montagne Tao Phùng. À l'époque coloniale, le gouverneur général Paul Doumer y a séjourné. Aujourd'hui, le Palais Blanc est un lieu historique et touristique.
-
-Vũng Tàu est donc une ville intéressante. On peut y découvrir la mer, les plages, les montagnes, les musées et les monuments historiques. C'est une belle destination pour un voyage au Vietnam.`;
-
-const READING_QUESTIONS = [
+const QUESTIONS = [
+  /* ---------- PARTIE I : GRAMMAIRE ET VOCABULAIRE (1–21) ---------- */
   {
-    id: 'r01', type: 'reading', section: 'reading',
-    topic: 'Đọc hiểu – Vị trí địa lý',
-    question: 'Où se trouve Vũng Tàu ?',
-    translation: 'Vũng Tàu nằm ở đâu?',
-    options: [
-      'Dans le nord du Vietnam',
-      'Dans le sud du Vietnam',
-      'Dans le centre du Vietnam',
-      'Dans les montagnes'
-    ],
+    id: 1, part: 1,
+    question: "J’aime bien ____ petit village de montagne.",
+    options: ["cette", "ce", "cet", "ces"],
     correct: 1,
-    explanation: 'Bài đọc viết: « Vũng Tàu est une belle ville du sud du Vietnam. » → Vũng Tàu là thành phố ở miền Nam Việt Nam. Đáp án đúng là B.',
-    evidence: 'Vũng Tàu est une belle ville du sud du Vietnam.'
+    explanation: "« village » là danh từ giống đực số ít nên dùng « ce ». « cette » dùng cho giống cái số ít, « cet » cho giống đực số ít bắt đầu bằng nguyên âm, « ces » dùng cho số nhiều."
   },
   {
-    id: 'r02', type: 'reading', section: 'reading',
-    topic: 'Đọc hiểu – Đặc điểm thành phố',
-    question: "Qu'est-ce qu'on trouve à Vũng Tàu ?",
-    translation: 'Người ta tìm thấy gì ở Vũng Tàu?',
-    options: ['Des plages', 'Des déserts', 'Des glaciers', 'Des volcans'],
-    correct: 0,
-    explanation: 'Bài đọc viết: « À Vũng Tàu, il y a de belles plages. » → Ở Vũng Tàu có những bãi biển đẹp. Đáp án đúng là A.',
-    evidence: 'À Vũng Tàu, il y a de belles plages.'
-  },
-  {
-    id: 'r03', type: 'reading', section: 'reading',
-    topic: 'Đọc hiểu – Hoạt động của du khách',
-    question: 'Que peuvent faire les touristes à la plage ?',
-    translation: 'Du khách có thể làm gì ở bãi biển?',
-    options: [
-      'Faire du ski',
-      'Faire du patinage',
-      'Se baigner',
-      'Faire du camping dans la neige'
-    ],
+    id: 2, part: 1,
+    question: "Qu’est-ce que « sdb » veut dire ?",
+    options: ["chambre", "park", "salle de bains", "étage"],
     correct: 2,
-    explanation: 'Bài đọc viết: « Les touristes aiment se promener au bord de la mer, se baigner et regarder le coucher du soleil. » → « Se baigner » = tắm biển. Đáp án đúng là C.',
-    evidence: 'Les touristes aiment se promener au bord de la mer, se baigner et regarder le coucher du soleil.'
+    explanation: "« sdb » là viết tắt của « salle de bains », nghĩa là phòng tắm."
   },
   {
-    id: 'r04', type: 'reading', section: 'reading',
-    topic: 'Đọc hiểu – Địa danh',
-    question: "Qu'est-ce que la tour Tam Thắng ?",
-    translation: 'Tháp Tam Thắng là gì?',
-    options: ['Un musée', 'Un hôtel', 'Un monument', 'Une plage'],
+    id: 3, part: 1,
+    question: "Allez jusqu’… pont, traversez et continuez jusqu’… opéra.",
+    options: ["au / à la", "à la / à l’", "au / à l’", "à la / au"],
     correct: 2,
-    explanation: 'Bài đọc viết: « Un monument intéressant est la tour Tam Thắng. » → Tháp Tam Thắng là một « monument » (di tích). Đáp án đúng là C.',
-    evidence: 'Un monument intéressant est la tour Tam Thắng.'
+    explanation: "« pont » là danh từ giống đực số ít → au pont. « opéra » bắt đầu bằng nguyên âm → à l’opéra."
   },
   {
-    id: 'r05', type: 'reading', section: 'reading',
-    topic: 'Đọc hiểu – Địa danh',
-    question: 'Où se trouve le Palais Blanc ?',
-    translation: 'Bạch Dinh (Palais Blanc) nằm ở đâu?',
-    options: [
-      'Sur la montagne Tao Phùng',
-      'Au milieu de la mer',
-      'Dans un désert',
-      'Dans une forêt'
-    ],
-    correct: 0,
-    explanation: "Bài đọc viết: « C'est un ancien bâtiment construit sur la montagne Tao Phùng. » → Bạch Dinh được xây trên núi Tao Phùng. Đáp án đúng là A.",
-    evidence: "C'est un ancien bâtiment construit sur la montagne Tao Phùng."
-  },
-  {
-    id: 'r06', type: 'reading', section: 'reading',
-    topic: 'Đọc hiểu – Nhân vật lịch sử',
-    question: 'Qui est Paul Doumer ?',
-    translation: 'Paul Doumer là ai?',
-    options: [
-      'Un touriste',
-      'Un artiste vietnamien',
-      'Un ancien gouverneur général',
-      'Un pêcheur'
-    ],
-    correct: 2,
-    explanation: "Bài đọc viết: « À l'époque coloniale, le gouverneur général Paul Doumer y a séjourné. » → Paul Doumer là một cựu Toàn quyền. Đáp án đúng là C.",
-    evidence: "À l'époque coloniale, le gouverneur général Paul Doumer y a séjourné."
-  },
-  {
-    id: 'r07', type: 'reading', section: 'reading',
-    topic: 'Đọc hiểu – Bảo tàng',
-    question: 'Que peut-on découvrir dans un musée à Vũng Tàu ?',
-    translation: 'Người ta có thể khám phá điều gì trong một bảo tàng ở Vũng Tàu?',
-    options: [
-      "L'histoire de la ville",
-      'Des recettes de cuisine',
-      'La météo',
-      'Des animaux sauvages'
-    ],
-    correct: 0,
-    explanation: "Bài đọc viết: « On peut visiter un musée pour découvrir l'histoire de Vũng Tàu. » → Có thể tham quan bảo tàng để tìm hiểu lịch sử của Vũng Tàu. Đáp án đúng là A.",
-    evidence: "On peut visiter un musée pour découvrir l'histoire de Vũng Tàu."
-  }
-];
-
-/* =====================================================================
-   24 CÂU HỎI NGỮ PHÁP + TỪ VỰNG (giữ nguyên nội dung gốc, kể cả câu 22, 23 trùng)
-   ===================================================================== */
-const GRAMMAR_QUESTIONS = [
-  {
-    id: 'g01', type: 'grammar',
-    topic: 'Tính từ chỉ định',
-    question: "J'aime bien ____ petit village de montagne.",
-    translation: 'Tôi rất thích ngôi làng nhỏ trên núi này.',
-    options: ['cette', 'ce', 'cet', 'ces'],
-    correct: 1,
-    explanation: '"petit village" là danh từ giống đực số ít, bắt đầu bằng phụ âm → dùng "ce". "Cette" cho giống cái, "cet" cho giống đực bắt đầu bằng nguyên âm, "ces" cho số nhiều.'
-  },
-  {
-    id: 'g02', type: 'vocab',
-    topic: 'Từ vựng – Chữ viết tắt',
-    question: "Qu'est-ce que « sdb » veut dire ?",
-    translation: '« sdb » có nghĩa là gì?',
-    options: ['chambre', 'park', 'salle de bains', 'étage'],
-    correct: 2,
-    explanation: '« sdb » là viết tắt của « salle de bains » (phòng tắm). Đáp án đúng là C.'
-  },
-  {
-    id: 'g03', type: 'grammar',
-    topic: 'Giới từ địa điểm',
-    question: "Allez jusqu'… pont, traversez et continuez jusqu'… opéra.",
-    translation: 'Hãy đi đến cây cầu, băng qua và tiếp tục đến nhà hát opera.',
-    options: ['au / à la', "à la / à l'", "au / à l'", 'à la / au'],
-    correct: 2,
-    explanation: '« pont » giống đực số ít → à + le = au. « opéra » bắt đầu bằng nguyên âm → à + l\' = à l\'. Vậy đáp án đúng là C. au / à l\'.'
-  },
-  {
-    id: 'g04', type: 'grammar',
-    topic: 'Đặt câu hỏi và trả lời',
+    id: 4, part: 1,
     question: "Écrivez une question et une réponse correctes : « Vous-aller-école-rollers »",
-    translation: 'Viết một câu hỏi và một câu trả lời đúng với các từ cho sẵn.',
     options: [
-      "Vous allez à l'école comment ? — J'y vais en rollers.",
-      "Vous aller à l'école comment ? — J'y vais en rollers.",
-      "Vous allez à l'école comment ? — J'y vais à rollers.",
-      "Vous allez l'école comment ? — J'y vais en rollers."
+      "Vous allez à l’école comment ? — J’y vais en rollers.",
+      "Vous aller à l’école comment ? — J’y vais en rollers.",
+      "Vous allez à l’école comment ? — J’y vais à rollers.",
+      "Vous allez l’école comment ? — J’y vais en rollers."
     ],
     correct: 0,
-    explanation: 'Chia đúng: « vous allez ». Giới từ: « à l\'école ». Phương tiện: « en rollers ». Đáp án đúng là A.'
+    explanation: "« vous allez » là cách chia đúng của động từ aller với vous. Trước « école » phải có giới từ: à l’école. Phương tiện đi lại dùng « en rollers » (en + phương tiện)."
   },
   {
-    id: 'g05', type: 'grammar',
-    topic: 'Cấu trúc câu với avoir',
-    question: "C'est un restaurant avec l'air conditionné.",
-    translation: 'Đó là một nhà hàng có máy lạnh.',
+    id: 5, part: 1,
+    question: "C’est un restaurant avec l’air conditionné.",
     options: [
-      "Ce restaurant est l'air conditionné.",
-      "Cette restaurant a l'air conditionné.",
-      "Ce restaurant a l'air conditionné.",
-      "Ce restaurant ont l'air conditionné."
+      "Ce restaurant est l’air conditionné.",
+      "Cette restaurant a l’air conditionné.",
+      "Ce restaurant a l’air conditionné.",
+      "Ce restaurant ont l’air conditionné."
     ],
     correct: 2,
-    explanation: '« restaurant » giống đực số ít → « Ce ». Động từ phải là « a » (avoir), không phải « est ». Đáp án đúng là C.'
+    explanation: "« restaurant » là danh từ giống đực số ít → « ce restaurant ». Động từ avoir với chủ ngữ số ít → « a ». Cấu trúc: avoir l’air conditionné (có máy lạnh)."
   },
   {
-    id: 'g06', type: 'grammar',
-    topic: 'Từ để hỏi',
-    question: "Ces chaussures coûtent ____, s'il vous plaît ?",
-    translation: 'Đôi giày này giá bao nhiêu ạ?',
-    options: ['Comment', 'Combien', 'Quels', 'Quelles'],
+    id: 6, part: 1,
+    question: "Ces chaussures coûtent ____, s’il vous plaît ?",
+    options: ["Comment", "Combien", "Quels", "Quelles"],
     correct: 1,
-    explanation: 'Hỏi giá dùng « Combien » (bao nhiêu). Đáp án đúng là B.'
+    explanation: "« Combien » dùng để hỏi giá tiền hoặc số lượng: Ça coûte combien ?"
   },
   {
-    id: 'g07', type: 'grammar',
-    topic: 'Đại từ y',
-    question: 'Tu passes à la poste ?',
-    translation: 'Bạn có ghé bưu điện không?',
-    options: ["Oui, j'y passe.", "Oui, tu y passes.", "Oui, je y passe.", "Oui, t'y passes."],
+    id: 7, part: 1,
+    question: "Tu passes à la poste ?",
+    options: [
+      "Oui, j’y passe.",
+      "Oui, tu y passes.",
+      "Oui, je y passe.",
+      "Oui, t’y passes."
+    ],
     correct: 0,
-    explanation: 'Trả lời với chủ ngữ « je », đại từ « y » thay cho « à la poste ». Khi « je » + « y » → « j\'y ». Đáp án đúng là A.'
+    explanation: "« y » thay thế cho « à la poste ». Với chủ ngữ « je », động từ passer chia là « passe » → j’y passe."
   },
   {
-    id: 'g08', type: 'grammar',
-    topic: 'Đại từ nhân xưng',
-    question: 'Ma mère habite avec ma femme et moi.',
-    translation: 'Mẹ tôi sống với vợ tôi và tôi.',
+    id: 8, part: 1,
+    question: "Ma mère habite avec ma femme et moi.",
     options: [
-      'Ma mère habite avec elle.',
-      'Ma mère habite avec eux.',
-      'Ma mère habite avec nous.',
-      'Ma mère habite avec elles.'
+      "Ma mère habite avec elle.",
+      "Ma mère habite avec eux.",
+      "Ma mère habite avec nous.",
+      "Ma mère habite avec elles."
     ],
     correct: 2,
-    explanation: '« ma femme et moi » = chúng tôi → đại từ « nous ». Đáp án đúng là C.'
+    explanation: "« nous » thay thế cho « ma femme et moi » (vợ tôi và tôi) — tức là ngôi thứ nhất số nhiều."
   },
   {
-    id: 'g09', type: 'grammar',
-    topic: 'Cấu trúc Ce sont',
-    question: 'Ces grands hôtels ont de belles plages.',
-    translation: 'Những khách sạn lớn này có những bãi biển đẹp.',
+    id: 9, part: 1,
+    question: "Comment est-ce que tu vas à la poste ?",
     options: [
-      "C'est des grands hôtels avec de belles plages.",
-      'Ce sont des grands hôtels avec de belles plages.',
-      "C'est des grands hôtels ont de belles plages.",
-      'Ce sont des grands hôtels ont de belles plages.'
+      "J’y vais à vélo.",
+      "Il y va à vélo.",
+      "Elle y va à vélo.",
+      "Tu y vas à vélo."
     ],
-    correct: 1,
-    explanation: 'Số nhiều dùng « Ce sont », và phải chuyển « ont » thành « avec ». Đáp án đúng là B.'
-  },
-  {
-    id: 'g10', type: 'grammar',
-    topic: 'Từ để hỏi',
-    question: '____ est le prix de cette robe ?',
-    translation: 'Giá của chiếc váy này là bao nhiêu?',
-    options: ['Comment', 'Quel', 'Quelle', 'Combien'],
-    correct: 1,
-    explanation: '« prix » giống đực số ít → dùng « Quel ». Cấu trúc đúng: « Quel est le prix… ». Đáp án đúng là B.'
-  },
-  {
-    id: 'g11', type: 'grammar',
-    topic: 'Cấu trúc C\'est un…',
-    question: 'Cet appartement a une belle terrasse.',
-    translation: 'Căn hộ này có một sân thượng đẹp.',
-    options: [
-      "C'est un appartement avec un belle terrasse.",
-      "C'est un appartement avec une belle terrasse.",
-      "C'est un appartement a avec une belle terrasse.",
-      "C'est une appartement avec une belle terrasse."
-    ],
-    correct: 1,
-    explanation: '« appartement » giống đực → « un appartement ». « terrasse » giống cái → « une belle terrasse ». Đáp án đúng là B.'
-  },
-  {
-    id: 'g12', type: 'grammar',
-    topic: 'Giới từ địa điểm',
-    question: 'Cantho se trouve … Vietnam.',
-    translation: 'Cần Thơ nằm ở … Việt Nam.',
-    options: ['au sud du', 'au sud de', 'au nord du', "à l'est du"],
     correct: 0,
-    explanation: 'Cần Thơ nằm ở miền Nam Việt Nam. « de + le » = « du ». Vậy « au sud du Vietnam ». Đáp án đúng là A.'
+    explanation: "Câu hỏi với « tu » thì trả lời với « je ». « y » thay cho « à la poste », « à vélo » nghĩa là bằng xe đạp."
   },
   {
-    id: 'g13', type: 'grammar',
-    topic: 'Giới từ địa điểm',
-    question: 'Elle va ____ gare.',
-    translation: 'Cô ấy đi đến nhà ga.',
-    options: ['à la', "à l'", 'au', 'à'],
-    correct: 0,
-    explanation: '« gare » giống cái số ít → « à la gare ». Đáp án đúng là A.'
-  },
-  {
-    id: 'g14', type: 'grammar',
-    topic: 'Câu mệnh lệnh',
-    question: "Mettez à l'impératif « Passer devant la poste » à la deuxième personne (Vous).",
-    translation: 'Chuyển sang mệnh lệnh với ngôi « Vous ».',
-    options: [
-      'Passons devant la poste.',
-      'Passes devant la poste.',
-      'Passez devant la poste.',
-      'Passe devant la poste.'
-    ],
+    id: 10, part: 1,
+    question: "____ vêtements est-ce que tu aimes ?",
+    options: ["Comment", "Combien", "Quels", "Quelles"],
     correct: 2,
-    explanation: 'Mệnh lệnh ngôi « vous » với động từ « passer » (nhóm 1) → « Passez ». Đáp án đúng là C.'
+    explanation: "« vêtements » là danh từ giống đực số nhiều → « Quels vêtements »."
   },
   {
-    id: 'g15', type: 'grammar',
-    topic: 'Cách diễn đạt lại câu hỏi',
-    question: 'Il y a combien de chambre dans votre maison ?',
-    translation: 'Có bao nhiêu phòng ngủ trong nhà của bạn?',
+    id: 11, part: 1,
+    question: "Cet appartement a une belle terrasse.",
     options: [
-      'Il y a combien de chambre chez moi ?',
-      'Il y a combien de chambre chez vous ?',
-      'Il y a combien de chambre chez toi ?',
-      'Il y a combien de chambre chez elle ?'
+      "C’est un appartement avec un belle terrasse.",
+      "C’est un appartement avec une belle terrasse.",
+      "C’est un appartement a avec une belle terrasse.",
+      "C’est une appartement avec une belle terrasse."
     ],
     correct: 1,
-    explanation: '« votre maison » là ngôi « vous » (lịch sự) → khi diễn đạt lại dùng « chez vous ». Đáp án đúng là B.'
+    explanation: "« appartement » giống đực → un appartement. « terrasse » giống cái → une belle terrasse."
   },
   {
-    id: 'g16', type: 'grammar',
-    topic: 'Từ để hỏi',
-    question: '« ____ vêtements est-ce que tu aimes ? »',
-    translation: 'Bạn thích những bộ quần áo nào?',
-    options: ['Comment', 'Combien', 'Quels', 'Quelles'],
-    correct: 2,
-    explanation: '« vêtements » giống đực số nhiều → « Quels ». Đáp án đúng là C.'
+    id: 12, part: 1,
+    question: "Can Tho se trouve … Vietnam.",
+    options: ["au sud du", "au sud de", "au nord du", "à l’est du"],
+    correct: 0,
+    explanation: "Cấu trúc đúng: au sud du Vietnam (ở phía Nam Việt Nam). « du » = de + le."
   },
   {
-    id: 'g17', type: 'grammar',
-    topic: 'Câu mệnh lệnh',
-    question: "Mettez à l'impératif « Regarder au tableau » à la deuxième personne (Tu).",
-    translation: 'Chuyển sang mệnh lệnh với ngôi « Tu ».',
+    id: 13, part: 1,
+    question: "Elle va ____ gare.",
+    options: ["à la", "à l’", "au", "à"],
+    correct: 0,
+    explanation: "« gare » là danh từ giống cái số ít → à la gare."
+  },
+  {
+    id: 14, part: 1,
+    question: "Mettez à l’impératif « Passer devant la poste » à la deuxième personne (Vous).",
     options: [
-      'Regardons au tableau !',
-      'Regardes au tableau !',
-      'Regardez au tableau !',
-      'Regarde au tableau !'
+      "Passons devant la poste.",
+      "Passes devant la poste.",
+      "Passez devant la poste.",
+      "Passe devant la poste."
+    ],
+    correct: 2,
+    explanation: "Thể mệnh lệnh với « vous » của động từ passer là: Passez !"
+  },
+  {
+    id: 15, part: 1,
+    question: "Il y a combien de chambre dans votre maison ?",
+    options: [
+      "Il y a combien de chambre chez moi ?",
+      "Il y a combien de chambre chez vous ?",
+      "Il y a combien de chambre chez toi ?",
+      "Il y a combien de chambre chez elle ?"
+    ],
+    correct: 1,
+    explanation: "Câu hỏi dùng « votre maison » (nhà của bạn) nên câu trả lời phải là « chez vous » (nhà bạn)."
+  },
+  {
+    id: 16, part: 1,
+    question: "Mettez à l’impératif « Regarder au tableau » à la deuxième personne (Tu).",
+    options: [
+      "Regardons au tableau !",
+      "Regardes au tableau !",
+      "Regardez au tableau !",
+      "Regarde au tableau !"
     ],
     correct: 3,
-    explanation: 'Mệnh lệnh ngôi « tu » với động từ nhóm 1 « regarder » → bỏ -s: « Regarde ». Đáp án đúng là D.'
+    explanation: "Mệnh lệnh với « tu » của regarder là: Regarde ! Động từ nhóm -er bỏ chữ « s » ở ngôi tu trong thể mệnh lệnh."
   },
   {
-    id: 'g18', type: 'grammar',
-    topic: 'Động từ – Chia thì hiện tại',
-    question: "Ils ____ souvent le bus pour aller à l'école.",
-    translation: 'Họ thường đi xe buýt đến trường.',
-    options: ['prend', 'prennent', 'prenez', 'prenons'],
+    id: 17, part: 1,
+    question: "Ils ____ souvent le bus pour aller à l’école.",
+    options: ["prend", "prennent", "prenez", "prenons"],
     correct: 1,
-    explanation: 'Chủ ngữ « Ils » với động từ « prendre » ở thì hiện tại → « prennent ». Đáp án đúng là B.'
+    explanation: "Động từ « prendre » với chủ ngữ « ils » được chia là « prennent »."
   },
   {
-    id: 'g19', type: 'grammar',
-    topic: 'Từ để hỏi',
-    question: '____ tu trouves cette table ? Elle est jolie, non ?',
-    translation: 'Bạn thấy chiếc bàn này thế nào? Nó đẹp nhỉ?',
-    options: ['Comment', 'Combien', 'Quels', 'Quelles'],
+    id: 18, part: 1,
+    question: "____ tu trouves cette table ? Elle est jolie, non ?",
+    options: ["Comment", "Combien", "Quels", "Quelles"],
     correct: 0,
-    explanation: 'Hỏi ý kiến, cảm nhận → dùng « Comment ». Đáp án đúng là A.'
+    explanation: "« Comment tu trouves… ? » = Bạn thấy … thế nào? — dùng để hỏi cảm nhận, ý kiến."
   },
   {
-    id: 'g20', type: 'grammar',
-    topic: 'Tính từ – Từ trái nghĩa',
-    question: 'Trouvez le contraire de la phrase « Mon voisin est calme ».',
-    translation: 'Tìm câu trái nghĩa với « Hàng xóm của tôi trầm tính ».',
+    id: 19, part: 1,
+    question: "Trouvez le contraire de la phrase « Mon voisin est calme ».",
     options: [
-      'Ma voisine est bruyant.',
-      'Ma voisine est grande.',
-      'Ma voisine est petite.',
-      'Ma voisine est bruyante.'
+      "Ma voisine est bruyant.",
+      "Ma voisine est grande.",
+      "Ma voisine est petite.",
+      "Ma voisine est bruyante."
     ],
     correct: 3,
-    explanation: 'Trái nghĩa của « calme » (trầm) là « bruyant(e) » (ồn ào). « voisine » giống cái → « bruyante ». Đáp án đúng là D.'
+    explanation: "« calme » (yên tĩnh) trái nghĩa với « bruyant / bruyante » (ồn ào). « voisine » là giống cái nên tính từ phải là « bruyante »."
   },
   {
-    id: 'g21', type: 'grammar',
-    topic: 'Tính từ chỉ định',
-    question: '____ sacs sont très grands.',
-    translation: 'Những chiếc túi này rất to.',
-    options: ['Ce', 'Cet', 'Cette', 'Ces'],
+    id: 20, part: 1,
+    question: "____ sacs sont très grands.",
+    options: ["Ce", "Cet", "Cette", "Ces"],
     correct: 3,
-    explanation: '« sacs » giống đực số nhiều → « Ces ». Đáp án đúng là D.'
+    explanation: "« sacs » là danh từ số nhiều → dùng « ces »."
   },
   {
-    id: 'g22', type: 'grammar',
-    topic: 'Cấu trúc C\'est un… (trùng câu 11)',
-    question: 'Cet appartement a une belle terrasse.',
-    translation: 'Căn hộ này có một sân thượng đẹp. (Câu này trùng với câu 11 – giữ nguyên theo đề gốc.)',
+    id: 21, part: 1,
+    question: "Trouvez la bonne question pour la réponse : « Les placards sont dans le salon. »",
     options: [
-      "C'est un appartement avec un belle terrasse.",
-      "C'est un appartement avec une belle terrasse.",
-      "C'est un appartement a avec une belle terrasse.",
-      "C'est une appartement avec une belle terrasse."
-    ],
-    correct: 1,
-    explanation: '« appartement » giống đực → « un appartement ». « terrasse » giống cái → « une belle terrasse ». Đáp án đúng là B.'
-  },
-  {
-    id: 'g23', type: 'grammar',
-    topic: 'Giới từ địa điểm (trùng câu 13)',
-    question: 'Elle va ____ gare.',
-    translation: 'Cô ấy đi đến nhà ga. (Câu này trùng với câu 13 – giữ nguyên theo đề gốc.)',
-    options: ['à la', "à l'", 'au', 'à'],
-    correct: 0,
-    explanation: '« gare » giống cái số ít → « à la gare ». Đáp án đúng là A.'
-  },
-  {
-    id: 'g24', type: 'grammar',
-    topic: 'Từ để hỏi địa điểm',
-    question: 'Trouvez la bonne question de la réponse « Les placards sont dans le salon. »',
-    translation: 'Tìm câu hỏi đúng cho câu trả lời « Những chiếc tủ đựng trong phòng khách ».',
-    options: [
-      'Où se trouve la cuisine ?',
-      'Où sont les toilettes ?',
-      'Où sont les placards ?',
-      'Où est la chambre ?'
+      "Où se trouve la cuisine ?",
+      "Où sont les toilettes ?",
+      "Où sont les placards ?",
+      "Où est la chambre ?"
     ],
     correct: 2,
-    explanation: 'Câu trả lời nói về « les placards » (những chiếc tủ). Câu hỏi phải là « Où sont les placards ? ». Đáp án đúng là C.'
+    explanation: "Câu trả lời nói về vị trí của « les placards » nên câu hỏi đúng là: Où sont les placards ?"
+  },
+
+  /* ---------- PARTIE II : COMPRÉHENSION ÉCRITE (22–28) ---------- */
+  {
+    id: 22, part: 2,
+    question: "Où se trouve Vũng Tàu ?",
+    options: [
+      "Dans le nord du Vietnam",
+      "Dans le sud du Vietnam",
+      "Dans le centre du Vietnam",
+      "Dans les montagnes"
+    ],
+    correct: 1,
+    explanation: "Bài đọc có câu: « Vũng Tàu est une belle ville du sud du Vietnam. »"
+  },
+  {
+    id: 23, part: 2,
+    question: "Qu’est-ce qu’on trouve à Vũng Tàu ?",
+    options: ["Des plages", "Des déserts", "Des glaciers", "Des volcans"],
+    correct: 0,
+    explanation: "Bài đọc nhắc đến « de belles plages » (những bãi biển đẹp) ở Vũng Tàu."
+  },
+  {
+    id: 24, part: 2,
+    question: "Que peuvent faire les touristes à la plage ?",
+    options: [
+      "Faire du ski",
+      "Faire du patinage",
+      "Se baigner",
+      "Faire du camping dans la neige"
+    ],
+    correct: 2,
+    explanation: "Đoạn văn nói: « Les touristes aiment […] se baigner. » — « se baigner » nghĩa là tắm biển / bơi."
+  },
+  {
+    id: 25, part: 2,
+    question: "Qu’est-ce que la tour Tam Thắng ?",
+    options: ["Un musée", "Un hôtel", "Un monument", "Une plage"],
+    correct: 2,
+    explanation: "Bài đọc viết: « Un monument intéressant est la tour Tam Thắng. » → đó là một di tích / công trình kỷ niệm."
+  },
+  {
+    id: 26, part: 2,
+    question: "Où se trouve le Palais Blanc ?",
+    options: [
+      "Sur la montagne Tao Phùng",
+      "Au milieu de la mer",
+      "Dans un désert",
+      "Dans une forêt"
+    ],
+    correct: 0,
+    explanation: "Bài đọc: « Le Palais Blanc […] est construit sur la montagne Tao Phùng. »"
+  },
+  {
+    id: 27, part: 2,
+    question: "Qui est Paul Doumer ?",
+    options: [
+      "Un touriste",
+      "Un artiste vietnamien",
+      "Un ancien gouverneur général",
+      "Un pêcheur"
+    ],
+    correct: 2,
+    explanation: "Bài đọc giới thiệu Paul Doumer là « le gouverneur général » (viên toàn quyền) thời kỳ thuộc địa."
+  },
+  {
+    id: 28, part: 2,
+    question: "Que peut-on découvrir dans un musée à Vũng Tàu ?",
+    options: [
+      "L’histoire de la ville",
+      "Des recettes de cuisine",
+      "La météo",
+      "Des animaux sauvages"
+    ],
+    correct: 0,
+    explanation: "Bài đọc nêu rõ: có thể đến bảo tàng để « découvrir l’histoire de Vũng Tàu » (khám phá lịch sử của thành phố)."
   }
 ];
 
-/* =====================================================================
-   PHẦN 2 — TIỆN ÍCH
-   ===================================================================== */
-function shuffleArray(arr){
-  for(let i = arr.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
-  }
-  return arr;
-}
-function esc(s){
-  return String(s === undefined || s === null ? '' : s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-function $(sel){ return document.querySelector(sel); }
-function $$(sel){ return Array.prototype.slice.call(document.querySelectorAll(sel)); }
-const LETTERS = ['A','B','C','D'];
+/* ============================================================
+   2. TIỆN ÍCH & LƯU TRỮ
+   ============================================================ */
 
-function normalizeQuestion(q, section){
-  return {
-    id: String(q.id),
-    type: q.type || (section === 'reading' ? 'reading' : 'grammar'),
-    section: section,
-    topic: q.topic || (section === 'reading' ? 'Đọc hiểu' : ''),
-    question: q.question,
-    translation: q.translation || '',
-    options: q.options.slice(),
-    correct: q.correct,
-    explanation: q.explanation || '',
-    evidence: q.evidence || ''
-  };
-}
+const QMAP = {};
+QUESTIONS.forEach(function (q) { QMAP[q.id] = q; });
+const TOTAL = QUESTIONS.length; // 28
 
-function prepareQuestion(q, doShuffleOptions){
-  const out = {
-    id: q.id,
-    type: q.type,
-    section: q.section,
-    topic: q.topic,
-    question: q.question,
-    translation: q.translation,
-    explanation: q.explanation,
-    evidence: q.evidence,
-    options: q.options.slice(),
-    correct: q.correct
-  };
-  if(doShuffleOptions){
-    const order = out.options.map(function(_, i){ return i; });
-    shuffleArray(order);
-    out.options = order.map(function(i){ return q.options[i]; });
-    out.correct = order.indexOf(q.correct);
-  }
-  return out;
-}
-
-/* =====================================================================
-   PHẦN 3 — NGÂN HÀNG CÂU HỎI
-   ===================================================================== */
-const GRAMMAR_BANK = GRAMMAR_QUESTIONS.map(function(q){ return normalizeQuestion(q, 'gv'); });
-const READING_BANK = READING_QUESTIONS.map(function(q){ return normalizeQuestion(q, 'reading'); });
-const FULL_BANK = GRAMMAR_BANK.concat(READING_BANK);
-
-const BANK_BY_ID = {};
-FULL_BANK.forEach(function(q){ BANK_BY_ID[q.id] = q; });
-
-/* =====================================================================
-   PHẦN 4 — LƯU TRỮ TIẾN ĐỘ (localStorage)
-   ===================================================================== */
-const LS_KEY = 'frenchA1QuizData_v1';
-
-function defaultStore(){
-  return {
-    examHistory: [],
-    wrongBank: {},
-    practiceStats: { answered: 0, correct: 0 },
-    lastPracticeMode: null
-  };
-}
-function loadStore(){
-  try{
-    const raw = localStorage.getItem(LS_KEY);
-    if(!raw) return defaultStore();
-    const parsed = JSON.parse(raw);
-    const base = defaultStore();
-    return {
-      examHistory: Array.isArray(parsed.examHistory) ? parsed.examHistory : base.examHistory,
-      wrongBank: (parsed.wrongBank && typeof parsed.wrongBank === 'object') ? parsed.wrongBank : base.wrongBank,
-      practiceStats: Object.assign(base.practiceStats, parsed.practiceStats || {}),
-      lastPracticeMode: parsed.lastPracticeMode || null
-    };
-  }catch(e){
-    return defaultStore();
-  }
-}
-function saveStore(){
-  try{ localStorage.setItem(LS_KEY, JSON.stringify(store)); }catch(e){ /* bỏ qua */ }
-}
-let store = loadStore();
-
-/* =====================================================================
-   PHẦN 5 — MODAL
-   ===================================================================== */
-let modalOkHandler = null;
-
-function showModal(title, bodyHtml, onOk, okText, hideCancel){
-  $('#modalTitle').textContent = title;
-  $('#modalBody').innerHTML = bodyHtml;
-  $('#modalOk').textContent = okText || 'Đồng ý';
-  $('#modalCancel').style.display = hideCancel ? 'none' : '';
-  modalOkHandler = onOk || null;
-  $('#modal').classList.add('open');
-}
-function closeModal(){
-  $('#modal').classList.remove('open');
-  modalOkHandler = null;
-}
-$('#modalOk').addEventListener('click', function(){
-  const h = modalOkHandler;
-  closeModal();
-  if(typeof h === 'function') h();
-});
-$('#modalCancel').addEventListener('click', closeModal);
-$('#modal').addEventListener('click', function(e){
-  if(e.target && e.target.id === 'modal') closeModal();
-});
-
-/* =====================================================================
-   PHẦN 6 — ĐIỀU HƯỚNG VIEW
-   ===================================================================== */
-function showView(name){
-  $$('.view').forEach(function(v){ v.classList.remove('active'); });
-  const view = document.getElementById('view-' + name);
-  if(view) view.classList.add('active');
-
-  $$('#mainNav button').forEach(function(b){
-    b.classList.toggle('active', b.dataset.view === name);
-  });
-
-  if(name === 'exam') renderExam();
-  if(name === 'practice') renderPracticeView();
-  if(name === 'results') renderResults();
-  if(name === 'progress') renderProgress();
-
-  window.scrollTo(0, 0);
-}
-
-$$('#mainNav button').forEach(function(b){
-  b.addEventListener('click', function(){ showView(b.dataset.view); });
-});
-
-/* =====================================================================
-   PHẦN 7 — TRANG CHỦ
-   ===================================================================== */
-function renderHome(){
-  const gCount = GRAMMAR_BANK.length;
-  const rCount = READING_BANK.length;
-  $('#homeTotal').textContent = gCount + rCount;
-  $('#homeGv').textContent = gCount;
-  $('#homeRead').textContent = rCount;
-}
-
-$$('.home-card').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    const action = btn.dataset.action;
-    if(action === 'exam'){ showView('exam'); }
-    else if(action === 'practice-gv'){ openPracticeMenu('gv'); }
-    else if(action === 'practice-reading'){ openPracticeMenu('reading'); }
-    else if(action === 'practice-all'){ openPracticeMenu('all'); }
-    else if(action === 'progress'){ showView('progress'); }
-  });
-});
-
-let practice = null;
-const practiceSettings = {
-  shuffleQuestions: true,
-  shuffleOptions: true
+const LS = {
+  HISTORY: "fa1_history_v1",
+  WRONG: "fa1_wrong_v1",
+  SESSION: "fa1_session_v1",
+  RESULT: "fa1_result_v1"
 };
 
-function openPracticeMenu(focus){
-  practice = null;
-  showView('practice');
-  renderPracticeMenu();
-  if(focus){
-    const map = { gv: 'grammar', reading: 'reading', all: 'all' };
-    const target = map[focus];
-    if(target){
-      const card = document.querySelector('.practice-card[data-mode="' + target + '"]');
-      if(card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+function load(key, def) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : def;
+  } catch (e) { return def; }
+}
+function save(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
+}
+function remove(key) {
+  try { localStorage.removeItem(key); } catch (e) {}
+}
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function getQuestion(id) { return QMAP[id]; }
+function formatDate(iso) {
+  try {
+    const d = new Date(iso);
+    const p = function (n) { return n < 10 ? "0" + n : "" + n; };
+    return p(d.getDate()) + "/" + p(d.getMonth() + 1) + "/" + d.getFullYear() +
+           " " + p(d.getHours()) + ":" + p(d.getMinutes());
+  } catch (e) { return iso; }
+}
+
+/* ============================================================
+   3. TRẠNG THÁI
+   ============================================================ */
+
+let session = null;      // bài đang làm
+let lastResult = null;   // kết quả gần nhất
+let view = "home";
+
+/* ============================================================
+   4. KHỞI TẠO
+   ============================================================ */
+
+const app = document.getElementById("app");
+
+function init() {
+  session = load(LS.SESSION, null);
+  lastResult = load(LS.RESULT, null);
+  if (session && session.submitted) session = null;
+
+  document.querySelectorAll(".tab").forEach(function (tab) {
+    tab.addEventListener("click", function () { showView(tab.dataset.view); });
+  });
+
+  app.addEventListener("click", handleClick);
+
+  render();
+}
+
+function showView(v) {
+  view = v;
+  document.querySelectorAll(".tab").forEach(function (t) {
+    t.classList.toggle("active", t.dataset.view === v);
+  });
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function render() {
+  if (view === "home") renderHome();
+  else if (view === "quiz") renderQuiz();
+  else if (view === "result") renderResult();
+  else if (view === "review") renderReview();
+  else if (view === "progress") renderProgress();
+}
+
+/* ============================================================
+   5. XỬ LÝ SỰ KIỆN
+   ============================================================ */
+
+function handleClick(e) {
+  const btn = e.target.closest("[data-action]");
+  if (!btn) return;
+  const action = btn.dataset.action;
+
+  switch (action) {
+    case "start-full":      startTest(false); break;
+    case "start-random":    startTest(true); break;
+    case "start-practice":  startPractice(); break;
+    case "review":          showView("review"); break;
+    case "resume":          showView("quiz"); break;
+    case "discard":         discardSession(); break;
+    case "select":          selectOption(Number(btn.dataset.orig)); break;
+    case "prev":            navigate(-1); break;
+    case "next":            navigate(1); break;
+    case "submit":          submitTest(); break;
+    case "check":           checkAnswer(); break;
+    case "home":            showView("home"); break;
+    case "progress":        showView("progress"); break;
+    case "clear-data":      clearData(); break;
   }
 }
 
-/* =====================================================================
-   PHẦN 8 — CHẾ ĐỘ THI THỬ
-   ===================================================================== */
-let exam = null;
-let lastResult = null;
+/* ============================================================
+   6. BẮT ĐẦU CÁC CHẾ ĐỘ
+   ============================================================ */
 
-function buildExamQuestions(){
-  const grammarPrepared = shuffleArray(GRAMMAR_BANK.slice()).map(function(q){
-    return prepareQuestion(q, true);
-  });
-  const readingPrepared = shuffleArray(READING_BANK.slice()).map(function(q){
-    return prepareQuestion(q, true);
-  });
-  return grammarPrepared.concat(readingPrepared);
+function confirmOverwrite() {
+  if (session && !session.submitted) {
+    return confirm("Bạn đang có một bài làm dở. Bắt đầu bài mới sẽ xóa bài cũ.\nBạn có muốn tiếp tục?");
+  }
+  return true;
 }
 
-function startExam(){
-  const questions = buildExamQuestions();
-  if(questions.length === 0){
-    showModal('Không thể bắt đầu', 'Ngân hàng câu hỏi đang trống.', null, 'Đóng', true);
-    return;
+function startTest(isRandom) {
+  if (!confirmOverwrite()) return;
+
+  let items = QUESTIONS.map(function (q) {
+    return { qid: q.id, order: q.options.map(function (_, i) { return i; }) };
+  });
+
+  if (isRandom) {
+    items = shuffle(items);
+    items.forEach(function (it) { it.order = shuffle(it.order); });
   }
-  exam = {
-    questions: questions,
-    answers: new Array(questions.length).fill(null),
-    flags: new Array(questions.length).fill(false),
-    index: 0,
-    showPassage: false
+
+  session = {
+    mode: isRandom ? "random" : "full",
+    items: items,
+    answers: {},
+    current: 0,
+    submitted: false,
+    startedAt: new Date().toISOString()
   };
-  $('#examIntro').innerHTML = '';
-  renderExamRunner();
-  window.scrollTo(0, 0);
+  save(LS.SESSION, session);
+  showView("quiz");
 }
 
-function renderExam(){
-  if(exam){
-    $('#examIntro').innerHTML = '';
-    renderExamRunner();
-  }else{
-    $('#examRunner').innerHTML = '';
-    renderExamIntro();
-  }
+function startPractice() {
+  if (!confirmOverwrite()) return;
+
+  session = {
+    mode: "practice",
+    items: QUESTIONS.map(function (q) {
+      return { qid: q.id, order: q.options.map(function (_, i) { return i; }) };
+    }),
+    answers: {},
+    checked: {},
+    current: 0,
+    submitted: false,
+    startedAt: new Date().toISOString()
+  };
+  save(LS.SESSION, session);
+  showView("quiz");
 }
 
-function renderExamIntro(){
-  const gCount = GRAMMAR_BANK.length;
-  const rCount = READING_BANK.length;
-  const total = gCount + rCount;
-
-  let html = '';
-
-  html += '' +
-    '<div class="card hero">' +
-      '<h2>Chế độ Thi thử</h2>' +
-      '<p class="lead">Mỗi đề thi gồm <b>' + total + ' câu</b>: ' +
-        '<b>' + gCount + '</b> câu Ngữ pháp + Từ vựng và <b>' + rCount + '</b> câu Đọc hiểu.</p>' +
-      '<ul class="muted small" style="margin:0 0 18px;padding-left:20px;line-height:1.9;">' +
-        '<li>Xáo trộn thứ tự câu hỏi mỗi lần bắt đầu đề mới.</li>' +
-        '<li>Xáo trộn thứ tự đáp án A, B, C, D (đáp án đúng được cập nhật chính xác).</li>' +
-        '<li>Không giới hạn thời gian làm bài.</li>' +
-        '<li>Không hiển thị đáp án hay giải thích trong lúc làm bài.</li>' +
-        '<li>Có thể đánh dấu câu hỏi để xem lại.</li>' +
-      '</ul>' +
-      '<button class="btn full" id="startExamBtn"' + (total === 0 ? ' disabled' : '') + '>Bắt đầu đề mới</button>' +
-    '</div>';
-
-  $('#examIntro').innerHTML = html;
-
-  const startBtn = $('#startExamBtn');
-  if(startBtn && total > 0){
-    startBtn.addEventListener('click', startExam);
-  }
+function discardSession() {
+  if (!confirm("Xóa bài làm dở và bắt đầu lại từ đầu?")) return;
+  session = null;
+  remove(LS.SESSION);
+  render();
 }
 
-function renderExamRunner(){
-  if(!exam) return;
+/* ============================================================
+   7. TRANG CHỦ
+   ============================================================ */
 
-  const total = exam.questions.length;
-  const i = exam.index;
-  const q = exam.questions[i];
-  const chosen = exam.answers[i];
-  const answeredCount = exam.answers.filter(function(a){ return a !== null; }).length;
-  const percent = total ? (answeredCount / total * 100) : 0;
+function renderHome() {
+  let html = "";
 
-  let html = '';
+  html += '<section class="hero">' +
+    "<h2>Kiểm tra tiếng Pháp trình độ A1</h2>" +
+    "<p>28 câu hỏi · Ngữ pháp – Từ vựng – Đọc hiểu · Không giới hạn thời gian · Có giải thích tiếng Việt</p>" +
+    '<div class="hero-badges">' +
+      "<span>📝 21 câu Grammaire &amp; Vocabulaire</span>" +
+      "<span>📖 7 câu Compréhension écrite</span>" +
+      "<span>💾 Tự động lưu tiến độ</span>" +
+    "</div>" +
+  "</section>";
 
-  html += '<div class="card" style="padding:16px;">';
-  html += '<div class="qmeta">';
-  html += '<span class="pill">Câu ' + (i + 1) + '/' + total + '</span>';
-  html += '<span class="pill ' + (q.section === 'reading' ? 'pill-read' : '') + '">' +
-          (q.section === 'reading' ? 'Đọc hiểu' : 'Ngữ pháp + Từ vựng') + '</span>';
-  if(q.topic) html += '<span class="pill pill-topic">' + esc(q.topic) + '</span>';
-  html += '</div>';
-  html += '<div class="progress-bar"><span style="width:' + percent.toFixed(1) + '%"></span></div>';
-  html += '<div class="muted small">Đã trả lời ' + answeredCount + '/' + total + ' câu</div>';
-  html += '</div>';
-
-  if(q.section === 'reading'){
-    html += '<div class="passage-wrap">' +
-      '<button class="btn ghost sm" id="togglePassage">' +
-        (exam.showPassage ? 'Ẩn bài đọc' : 'Xem bài đọc') + '</button>' +
-      '<div class="passage ' + (exam.showPassage ? 'open' : '') + '">' +
-        esc(READING_PASSAGE).replace(/\n/g, '<br>') +
-      '</div></div>';
+  // Banner tiếp tục bài làm dở
+  if (session && !session.submitted) {
+    const answered = session.items.filter(function (it) {
+      return session.answers[it.qid] !== undefined;
+    }).length;
+    const label = session.mode === "practice" ? "phần luyện tập" :
+                  session.mode === "random" ? "đề ngẫu nhiên" : "đề đầy đủ";
+    html += '<div class="resume">' +
+      "<p>⏸️ Bạn có một <b>" + label + "</b> đang làm dở — đã trả lời <b>" + answered + "/" + TOTAL + "</b> câu.</p>" +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+        '<button class="btn primary small" data-action="resume">▶ Tiếp tục</button>' +
+        '<button class="btn ghost small" data-action="discard">🗑 Bỏ bài cũ</button>' +
+      "</div>" +
+    "</div>";
   }
 
-  html += '<div class="card question-card">';
-  html += '<p class="qtext">' + esc(q.question) + '</p>';
+  html += '<div class="mode-grid">';
+
+  html += '<div class="mode-card">' +
+    '<div class="mode-icon">📝</div>' +
+    "<h3>Làm toàn bộ đề</h3>" +
+    "<p>28 câu hỏi theo đúng thứ tự gốc của đề thi. Chuyển câu tự do, có thanh tiến trình và nộp bài ở cuối.</p>" +
+    '<button class="btn primary" data-action="start-full">Bắt đầu</button>' +
+  "</div>";
+
+  html += '<div class="mode-card">' +
+    '<div class="mode-icon">🔀</div>' +
+    "<h3>Đề ngẫu nhiên</h3>" +
+    "<p>Xáo trộn thứ tự câu hỏi và thứ tự đáp án A–B–C–D. Mỗi lần bắt đầu sẽ là một đề khác nhau.</p>" +
+    '<button class="btn primary" data-action="start-random">Bắt đầu</button>' +
+  "</div>";
+
+  html += '<div class="mode-card">' +
+    '<div class="mode-icon">🎯</div>' +
+    "<h3>Luyện tập từng câu</h3>" +
+    "<p>Chọn đáp án và kiểm tra ngay. Hiển thị đáp án đúng kèm giải thích ngắn gọn bằng tiếng Việt.</p>" +
+    '<button class="btn primary" data-action="start-practice">Bắt đầu</button>' +
+  "</div>";
+
+  html += '<div class="mode-card">' +
+    '<div class="mode-icon">📚</div>' +
+    "<h3>Xem lại toàn bộ</h3>" +
+    "<p>Ôn tập không cần làm bài: xem cả 28 câu hỏi, đáp án đúng và giải thích chi tiết.</p>" +
+    '<button class="btn ghost" data-action="review">Xem ngay</button>' +
+  "</div>";
+
+  html += "</div>";
+
+  if (lastResult) {
+    html += '<div class="page-actions">' +
+      '<button class="btn ghost" data-action="progress">📊 Xem thống kê &amp; kết quả gần nhất</button>' +
+    "</div>";
+  }
+
+  app.innerHTML = html;
+}
+
+/* ============================================================
+   8. MÀN HÌNH LÀM BÀI
+   ============================================================ */
+
+function renderQuiz() {
+  if (!session) { showView("home"); return; }
+
+  const item = session.items[session.current];
+  const q = getQuestion(item.qid);
+  const isPractice = session.mode === "practice";
+  const isChecked = !!(isPractice && session.checked && session.checked[q.id]);
+  const chosen = session.answers[q.id];
+  const letters = ["A", "B", "C", "D"];
+
+  const answeredCount = session.items.filter(function (it) {
+    return session.answers[it.qid] !== undefined;
+  }).length;
+  const pct = Math.round((answeredCount / TOTAL) * 100);
+
+  const modeLabel =
+    session.mode === "full" ? "📝 Làm toàn bộ đề" :
+    session.mode === "random" ? "🔀 Đề ngẫu nhiên" :
+    "🎯 Luyện tập từng câu";
+
+  const partLabel = q.part === 1 ? "Partie I · Grammaire & Vocabulaire" : "Partie II · Compréhension écrite";
+
+  let html = '<div class="quiz-top">' +
+    '<div class="quiz-meta">' +
+      '<span class="pill">' + modeLabel + "</span>" +
+      '<span class="pill part">' + partLabel + "</span>" +
+    "</div>" +
+    '<div class="quiz-counter">Question <b>' + (session.current + 1) + "</b> / " + TOTAL + "</div>" +
+    '<div class="progress"><div class="progress-fill" id="progressFill" style="width:' + pct + '%"></div></div>' +
+    '<div class="answered-label" id="answeredLabel">Đã trả lời: <b>' + answeredCount + "</b> / " + TOTAL + "</div>" +
+  "</div>";
+
+  // Đoạn văn đọc hiểu cho phần II
+  if (q.part === 2) {
+    html += '<details class="passage" open>' +
+      "<summary>📖 Texte : Vũng Tàu – une belle ville au bord de la mer</summary>" +
+      '<div class="passage-body">' + READING_HTML + "</div>" +
+    "</details>";
+  }
+
+  // Thẻ câu hỏi
+  html += '<div class="question-card">';
+  html += '<p class="question-text">' + esc(q.question) + "</p>";
   html += '<div class="options">';
-  q.options.forEach(function(opt, idx){
-    let cls = 'option';
-    if(chosen === idx) cls += ' selected';
-    html += '<button class="' + cls + '" data-opt="' + idx + '">' +
-              '<span class="letter">' + LETTERS[idx] + '</span>' +
-              '<span class="opt-text">' + esc(opt) + '</span>' +
-            '</button>';
-  });
-  html += '</div></div>';
 
-  html += '<div class="exam-nav">' +
-    '<button class="btn ghost" id="prevBtn"' + (i === 0 ? ' disabled' : '') + '>← Câu trước</button>' +
-    '<button class="btn ghost' + (exam.flags[i] ? ' flagged' : '') + '" id="flagBtn">' +
-      (exam.flags[i] ? '★ Đã đánh dấu' : '☆ Đánh dấu xem lại') + '</button>' +
-    '<button class="btn ghost" id="nextBtn"' + (i === total - 1 ? ' disabled' : '') + '>Câu sau →</button>' +
-  '</div>';
+  item.order.forEach(function (origIdx, pos) {
+    let cls = "option";
+    if (chosen === origIdx) cls += " selected";
 
-  html += '<div class="exam-actions">' +
-    '<button class="btn subtle" id="submitBtn">Nộp bài</button>' +
-  '</div>';
-
-  html += '<div class="card palette-card">';
-  html += '<div class="palette-title">Danh sách câu hỏi</div>';
-  html += '<div class="palette">';
-  exam.questions.forEach(function(_, idx){
-    let cls = 'palette-item';
-    if(exam.answers[idx] !== null) cls += ' answered';
-    if(exam.flags[idx]) cls += ' flagged';
-    if(idx === i) cls += ' current';
-    html += '<button class="' + cls + '" data-jump="' + idx + '">' + (idx + 1) + '</button>';
-  });
-  html += '</div>';
-  html += '<div class="legend">' +
-    '<span><i class="dot answered"></i> Đã trả lời</span>' +
-    '<span><i class="dot flagged"></i> Đánh dấu</span>' +
-    '<span><i class="dot current"></i> Câu hiện tại</span>' +
-  '</div></div>';
-
-  $('#examRunner').innerHTML = html;
-
-  $$('#examRunner .option').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      exam.answers[exam.index] = Number(btn.dataset.opt);
-      renderExamRunner();
-    });
-  });
-
-  const prevBtn = $('#prevBtn');
-  if(prevBtn) prevBtn.addEventListener('click', function(){
-    if(exam.index > 0){ exam.index--; renderExamRunner(); window.scrollTo(0, 0); }
-  });
-
-  const nextBtn = $('#nextBtn');
-  if(nextBtn) nextBtn.addEventListener('click', function(){
-    if(exam.index < exam.questions.length - 1){ exam.index++; renderExamRunner(); window.scrollTo(0, 0); }
-  });
-
-  const flagBtn = $('#flagBtn');
-  if(flagBtn) flagBtn.addEventListener('click', function(){
-    exam.flags[exam.index] = !exam.flags[exam.index];
-    renderExamRunner();
-  });
-
-  const togglePassage = $('#togglePassage');
-  if(togglePassage) togglePassage.addEventListener('click', function(){
-    exam.showPassage = !exam.showPassage;
-    renderExamRunner();
-  });
-
-  const submitBtn = $('#submitBtn');
-  if(submitBtn) submitBtn.addEventListener('click', requestSubmitExam);
-
-  $$('#examRunner .palette-item').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      exam.index = Number(btn.dataset.jump);
-      renderExamRunner();
-      window.scrollTo(0, 0);
-    });
-  });
-}
-
-function requestSubmitExam(){
-  if(!exam) return;
-  const unanswered = exam.answers.filter(function(a){ return a === null; }).length;
-  const total = exam.questions.length;
-
-  if(unanswered > 0){
-    showModal(
-      'Chưa hoàn thành',
-      'Bạn còn <b>' + unanswered + '/' + total + '</b> câu chưa trả lời.<br>Bạn vẫn muốn nộp bài?',
-      finishExam,
-      'Vẫn nộp bài'
-    );
-  }else{
-    showModal(
-      'Nộp bài',
-      'Bạn đã trả lời đủ <b>' + total + '</b> câu.<br>Nộp bài để xem kết quả?',
-      finishExam,
-      'Nộp bài'
-    );
-  }
-}
-
-function finishExam(){
-  if(!exam) return;
-
-  const total = exam.questions.length;
-  let correct = 0, wrong = 0, unanswered = 0;
-  let gvTotal = 0, gvCorrect = 0, rdTotal = 0, rdCorrect = 0;
-  const wrongIds = [];
-
-  const details = exam.questions.map(function(q, idx){
-    const chosen = exam.answers[idx];
-    const isCorrect = (chosen !== null) && (chosen === q.correct);
-
-    if(chosen === null) unanswered++;
-    else if(isCorrect) correct++;
-    else { wrong++; wrongIds.push(q.id); }
-
-    if(q.section === 'gv'){ gvTotal++; if(isCorrect) gvCorrect++; }
-    else { rdTotal++; if(isCorrect) rdCorrect++; }
-
-    return { question: q, chosen: chosen, isCorrect: isCorrect };
-  });
-
-  const score10 = total ? Math.round((correct / total) * 10 * 100) / 100 : 0;
-  const percent = total ? Math.round((correct / total) * 1000) / 10 : 0;
-
-  lastResult = {
-    date: Date.now(),
-    total: total, correct: correct, wrong: wrong, unanswered: unanswered,
-    score10: score10, percent: percent,
-    gvTotal: gvTotal, gvCorrect: gvCorrect,
-    rdTotal: rdTotal, rdCorrect: rdCorrect,
-    details: details, showReview: false
-  };
-
-  store.examHistory.push({
-    date: lastResult.date, total: total, correct: correct, wrong: wrong,
-    unanswered: unanswered, score10: score10, percent: percent,
-    gvCorrect: gvCorrect, gvTotal: gvTotal,
-    rdCorrect: rdCorrect, rdTotal: rdTotal
-  });
-  if(store.examHistory.length > 100) store.examHistory = store.examHistory.slice(-100);
-
-  wrongIds.forEach(function(id){
-    if(!store.wrongBank[id]) store.wrongBank[id] = { count: 0, last: 0 };
-    store.wrongBank[id].count++;
-    store.wrongBank[id].last = Date.now();
-  });
-
-  saveStore();
-
-  exam = null;
-  $('#examRunner').innerHTML = '';
-  showView('results');
-}
-
-/* =====================================================================
-   PHẦN 9 — KẾT QUẢ
-   ===================================================================== */
-function renderResults(){
-  const box = $('#resultsContent');
-
-  if(!lastResult){
-    box.innerHTML =
-      '<div class="card">' +
-        '<h2>Kết quả thi</h2>' +
-        '<div class="empty-state">Bạn chưa có kết quả thi nào trong phiên làm việc này.<br>' +
-        'Hãy bắt đầu một đề thi thử để xem kết quả chi tiết tại đây.</div>' +
-        '<button class="btn full" id="goExamBtn">Bắt đầu thi thử</button>' +
-      '</div>';
-    const b = $('#goExamBtn');
-    if(b) b.addEventListener('click', function(){ showView('exam'); });
-    return;
-  }
-
-  const r = lastResult;
-  let html = '';
-
-  html += '<div class="card score-hero">';
-  html += '<div class="score-big">' + r.score10.toFixed(2) + '<span style="font-size:1.3rem;color:var(--muted);">/10</span></div>';
-  html += '<div class="score-sub">Độ chính xác: <b>' + r.percent.toFixed(1) + '%</b> — ' +
-          r.correct + '/' + r.total + ' câu đúng</div>';
-  html += '<div class="result-grid">' +
-      '<div class="result-box ok"><b>' + r.correct + '</b><span>Câu đúng</span></div>' +
-      '<div class="result-box no"><b>' + r.wrong + '</b><span>Câu sai</span></div>' +
-      '<div class="result-box skip"><b>' + r.unanswered + '</b><span>Chưa trả lời</span></div>' +
-      '<div class="result-box"><b>' + r.total + '</b><span>Tổng số câu</span></div>' +
-    '</div>';
-  html += '</div>';
-
-  html += '<div class="card">';
-  html += '<h3>Kết quả theo từng phần</h3>';
-  html += '<div class="result-grid">' +
-      '<div class="result-box"><b>' + r.gvCorrect + '/' + r.gvTotal + '</b><span>Ngữ pháp + Từ vựng</span></div>' +
-      '<div class="result-box"><b>' + r.rdCorrect + '/' + r.rdTotal + '</b><span>Đọc hiểu</span></div>' +
-    '</div>';
-  html += '</div>';
-
-  html += '<div class="card">' +
-    '<div style="display:flex;gap:10px;flex-wrap:wrap;">' +
-      '<button class="btn" id="newExamBtn" style="flex:1 1 180px;">Làm đề mới</button>' +
-      '<button class="btn ghost" id="toggleReviewBtn" style="flex:1 1 180px;">' +
-        (r.showReview ? 'Ẩn bài làm' : 'Xem lại bài làm') + '</button>' +
-    '</div>' +
-  '</div>';
-
-  if(r.showReview){
-    html += '<div class="card"><h3>Xem lại bài làm chi tiết</h3>';
-    r.details.forEach(function(d, idx){
-      const q = d.question;
-      let cls = 'review-item ';
-      let badge = '';
-      if(d.chosen === null){ cls += 'r-skip'; badge = '<span class="badge skip">Chưa trả lời</span>'; }
-      else if(d.isCorrect){ cls += 'r-ok'; badge = '<span class="badge ok">Đúng</span>'; }
-      else { cls += 'r-no'; badge = '<span class="badge no">Sai</span>'; }
-
-      html += '<div class="' + cls + '">';
-      html += '<div class="review-head">' +
-                '<span class="pill">Câu ' + (idx + 1) + '</span>' +
-                '<span class="pill ' + (q.section === 'reading' ? 'pill-read' : '') + '">' +
-                  (q.section === 'reading' ? 'Đọc hiểu' : 'Ngữ pháp + Từ vựng') + '</span>' +
-                badge +
-              '</div>';
-      html += '<p class="qtext" style="font-size:1rem;">' + esc(q.question) + '</p>';
-
-      if(d.chosen !== null){
-        html += '<div class="ans-line ' + (d.isCorrect ? 'correct' : 'wrong') + '">' +
-                  '<b>Bạn chọn:</b> ' + LETTERS[d.chosen] + '. ' + esc(q.options[d.chosen]) +
-                '</div>';
-      }else{
-        html += '<div class="ans-line wrong"><b>Bạn chọn:</b> (không trả lời)</div>';
-      }
-
-      html += '<div class="ans-line correct">' +
-                '<b>Đáp án đúng:</b> ' + LETTERS[q.correct] + '. ' + esc(q.options[q.correct]) +
-              '</div>';
-
-      if(q.explanation){
-        html += '<div class="explain-box"><b>Giải thích:</b> ' + esc(q.explanation) + '</div>';
-      }
-      if(q.section === 'reading' && q.evidence){
-        html += '<div class="explain-box"><b>Dẫn chứng trong bài đọc:</b> « ' + esc(q.evidence) + ' »</div>';
-      }
-
-      html += '</div>';
-    });
-    html += '</div>';
-  }
-
-  box.innerHTML = html;
-
-  const newBtn = $('#newExamBtn');
-  if(newBtn) newBtn.addEventListener('click', function(){
-    showView('exam');
-    startExam();
-  });
-
-  const toggleBtn = $('#toggleReviewBtn');
-  if(toggleBtn) toggleBtn.addEventListener('click', function(){
-    lastResult.showReview = !lastResult.showReview;
-    renderResults();
-  });
-}
-
-/* =====================================================================
-   PHẦN 10 — CHẾ ĐỘ LUYỆN TẬP
-   ===================================================================== */
-function renderPracticeView(){
-  if(practice){
-    $('#practiceMenu').innerHTML = '';
-    renderPracticeRunner();
-  }else{
-    $('#practiceRunner').innerHTML = '';
-    renderPracticeMenu();
-  }
-}
-
-function renderPracticeMenu(){
-  const grammarCount = GRAMMAR_BANK.filter(function(q){ return q.type === 'grammar'; }).length;
-  const vocabCount = GRAMMAR_BANK.filter(function(q){ return q.type === 'vocab'; }).length;
-  const gvCount = GRAMMAR_BANK.length;
-  const rdCount = READING_BANK.length;
-  const totalCount = FULL_BANK.length;
-
-  let html = '';
-
-  html += '<div class="card">' +
-    '<h2>Chế độ Luyện tập</h2>' +
-    '<p class="lead">Chọn dạng bài bạn muốn luyện. Trong chế độ luyện tập, đáp án đúng, ' +
-    'giải thích tiếng Việt và dẫn chứng sẽ hiện ra ngay sau khi bạn chọn đáp án.</p>' +
-    '<div class="practice-grid">' +
-      '<button class="practice-card" data-mode="grammar"' + (grammarCount === 0 ? ' disabled' : '') + '>' +
-        '<span class="pc-title">1. Luyện tập Ngữ pháp</span>' +
-        '<span class="pc-sub">' + grammarCount + ' câu ngữ pháp</span>' +
-      '</button>' +
-      '<button class="practice-card" data-mode="vocab"' + (vocabCount === 0 ? ' disabled' : '') + '>' +
-        '<span class="pc-title">2. Luyện tập Từ vựng</span>' +
-        '<span class="pc-sub">' + vocabCount + ' câu từ vựng</span>' +
-      '</button>' +
-      '<button class="practice-card" data-mode="reading"' + (rdCount === 0 ? ' disabled' : '') + '>' +
-        '<span class="pc-title">3. Luyện tập Đọc hiểu</span>' +
-        '<span class="pc-sub">' + rdCount + ' câu đọc hiểu (bài Vũng Tàu)</span>' +
-      '</button>' +
-      '<button class="practice-card" data-mode="all"' + (totalCount === 0 ? ' disabled' : '') + '>' +
-        '<span class="pc-title">4. Luyện tập toàn bộ câu hỏi</span>' +
-        '<span class="pc-sub">' + totalCount + ' câu (Ngữ pháp + Từ vựng + Đọc hiểu)</span>' +
-      '</button>' +
-      '<button class="practice-card" data-mode="bank"' + (totalCount === 0 ? ' disabled' : '') + '>' +
-        '<span class="pc-title">5. Toàn bộ ngân hàng câu hỏi</span>' +
-        '<span class="pc-sub">' + totalCount + ' câu — tự động bao gồm câu hỏi bổ sung sau này</span>' +
-      '</button>' +
-    '</div>' +
-    '<div class="settings">' +
-      '<label><input type="checkbox" id="pShuffleQ"' + (practiceSettings.shuffleQuestions ? ' checked' : '') + '> Xáo trộn thứ tự câu hỏi</label>' +
-      '<label><input type="checkbox" id="pShuffleO"' + (practiceSettings.shuffleOptions ? ' checked' : '') + '> Xáo trộn thứ tự đáp án</label>' +
-    '</div>' +
-  '</div>';
-
-  $('#practiceMenu').innerHTML = html;
-
-  const sq = $('#pShuffleQ');
-  if(sq) sq.addEventListener('change', function(){ practiceSettings.shuffleQuestions = sq.checked; });
-  const so = $('#pShuffleO');
-  if(so) so.addEventListener('change', function(){ practiceSettings.shuffleOptions = so.checked; });
-
-  $$('.practice-card').forEach(function(card){
-    if(card.disabled) return;
-    card.addEventListener('click', function(){
-      startPractice(card.dataset.mode);
-    });
-  });
-}
-
-function getPracticePool(mode){
-  if(mode === 'grammar') return GRAMMAR_BANK.filter(function(q){ return q.type === 'grammar'; });
-  if(mode === 'vocab') return GRAMMAR_BANK.filter(function(q){ return q.type === 'vocab'; });
-  if(mode === 'reading') return READING_BANK.slice();
-  if(mode === 'all') return GRAMMAR_BANK.concat(READING_BANK);
-  if(mode === 'bank') return FULL_BANK.slice();
-  if(mode === 'wrong'){
-    return Object.keys(store.wrongBank)
-      .filter(function(id){ return BANK_BY_ID[id]; })
-      .map(function(id){ return BANK_BY_ID[id]; });
-  }
-  return [];
-}
-
-function startPractice(mode){
-  const pool = getPracticePool(mode);
-  if(pool.length === 0){
-    showModal('Không có câu hỏi', 'Chưa có câu hỏi nào cho dạng luyện tập này.', null, 'Đóng', true);
-    return;
-  }
-
-  let questions = pool.map(function(q){
-    return prepareQuestion(q, practiceSettings.shuffleOptions);
-  });
-  if(practiceSettings.shuffleQuestions) shuffleArray(questions);
-
-  practice = {
-    mode: mode,
-    questions: questions,
-    index: 0,
-    chosen: null,
-    answered: false,
-    correctCount: 0,
-    answeredCount: 0,
-    showPassage: false,
-    finished: false
-  };
-
-  store.lastPracticeMode = mode;
-  saveStore();
-
-  $('#practiceMenu').innerHTML = '';
-  renderPracticeRunner();
-  window.scrollTo(0, 0);
-}
-
-function practiceModeLabel(mode){
-  const map = {
-    grammar: 'Ngữ pháp',
-    vocab: 'Từ vựng',
-    reading: 'Đọc hiểu',
-    all: 'Toàn bộ câu hỏi',
-    bank: 'Toàn bộ ngân hàng câu hỏi',
-    wrong: 'Luyện lại câu sai'
-  };
-  return map[mode] || 'Luyện tập';
-}
-
-function renderPracticeRunner(){
-  if(!practice) return;
-
-  const box = $('#practiceRunner');
-
-  if(practice.finished){
-    const total = practice.questions.length;
-    const pct = total ? Math.round((practice.correctCount / total) * 1000) / 10 : 0;
-    let html = '<div class="card score-hero">' +
-      '<h2>Hoàn thành luyện tập!</h2>' +
-      '<div class="score-big">' + practice.correctCount + '/' + total + '</div>' +
-      '<div class="score-sub">Độ chính xác: <b>' + pct.toFixed(1) + '%</b> — Dạng bài: ' +
-        esc(practiceModeLabel(practice.mode)) + '</div>' +
-      '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;">' +
-        '<button class="btn" id="pAgainBtn" style="flex:1 1 180px;">Luyện lại dạng này</button>' +
-        '<button class="btn ghost" id="pMenuBtn" style="flex:1 1 180px;">Về menu luyện tập</button>' +
-      '</div>' +
-    '</div>';
-    box.innerHTML = html;
-
-    const again = $('#pAgainBtn');
-    if(again) again.addEventListener('click', function(){
-      const mode = practice.mode;
-      practice = null;
-      startPractice(mode);
-    });
-    const menu = $('#pMenuBtn');
-    if(menu) menu.addEventListener('click', function(){
-      practice = null;
-      renderPracticeView();
-    });
-    return;
-  }
-
-  const total = practice.questions.length;
-  const i = practice.index;
-  const q = practice.questions[i];
-  const chosen = practice.chosen;
-  const answered = practice.answered;
-  const percent = total ? ((i) / total * 100) : 0;
-
-  let html = '';
-
-  html += '<div class="card" style="padding:16px;">';
-  html += '<div class="qmeta">';
-  html += '<span class="pill">Câu ' + (i + 1) + '/' + total + '</span>';
-  html += '<span class="pill ' + (q.section === 'reading' ? 'pill-read' : '') + '">' +
-          (q.section === 'reading' ? 'Đọc hiểu' : 'Ngữ pháp + Từ vựng') + '</span>';
-  if(q.topic) html += '<span class="pill pill-topic">' + esc(q.topic) + '</span>';
-  html += '<span class="pill">' + esc(practiceModeLabel(practice.mode)) + '</span>';
-  html += '</div>';
-  html += '<div class="progress-bar"><span style="width:' + percent.toFixed(1) + '%"></span></div>';
-  html += '<div class="muted small">Đúng ' + practice.correctCount + '/' + practice.answeredCount +
-          ' câu đã trả lời</div>';
-  html += '</div>';
-
-  if(q.section === 'reading'){
-    html += '<div class="passage-wrap">' +
-      '<button class="btn ghost sm" id="pTogglePassage">' +
-        (practice.showPassage ? 'Ẩn bài đọc' : 'Xem bài đọc') + '</button>' +
-      '<div class="passage ' + (practice.showPassage ? 'open' : '') + '">' +
-        esc(READING_PASSAGE).replace(/\n/g, '<br>') +
-      '</div></div>';
-  }
-
-  html += '<div class="card question-card">';
-  html += '<p class="qtext">' + esc(q.question) + '</p>';
-  html += '<div class="options">';
-  q.options.forEach(function(opt, idx){
-    let cls = 'option';
-    if(answered){
-      cls += ' disabled';
-      if(idx === q.correct) cls += ' correct';
-      else if(idx === chosen) cls += ' incorrect';
-    }else if(chosen === idx){
-      cls += ' selected';
+    if (isChecked) {
+      if (origIdx === q.correct) cls += " correct";
+      else if (chosen === origIdx) cls += " wrong";
     }
-    html += '<button class="' + cls + '" data-popt="' + idx + '">' +
-              '<span class="letter">' + LETTERS[idx] + '</span>' +
-              '<span class="opt-text">' + esc(opt) + '</span>' +
-            '</button>';
-  });
-  html += '</div>';
 
-  if(answered){
-    const isCorrect = (chosen === q.correct);
-    html += '<div class="feedback ' + (isCorrect ? 'fb-ok' : 'fb-no') + '">';
-    html += '<div class="fb-head">' + (isCorrect ? '✔ Chính xác!' : '✘ Chưa đúng') + '</div>';
-    html += '<div class="fb-row"><b>Đáp án đúng:</b> ' +
-              LETTERS[q.correct] + '. ' + esc(q.options[q.correct]) + '</div>';
-    if(!isCorrect && chosen !== null){
-      html += '<div class="fb-row"><b>Bạn đã chọn:</b> ' +
-                LETTERS[chosen] + '. ' + esc(q.options[chosen]) + '</div>';
-    }
-    if(q.translation){
-      html += '<div class="fb-row"><b>Dịch nghĩa câu hỏi:</b> ' + esc(q.translation) + '</div>';
-    }
-    if(q.explanation){
-      html += '<div class="fb-row"><b>Giải thích:</b> ' + esc(q.explanation) + '</div>';
-    }
-    if(q.topic){
-      html += '<div class="fb-row"><b>Kiến thức liên quan:</b> ' + esc(q.topic) + '</div>';
-    }
-    if(q.section === 'reading' && q.evidence){
-      html += '<div class="fb-row"><b>Dẫn chứng trong bài đọc:</b> « ' + esc(q.evidence) + ' »</div>';
-    }
-    html += '</div>';
+    html += '<button class="' + cls + '" data-action="select" data-orig="' + origIdx + '"' +
+      (isChecked ? " disabled" : "") + ">" +
+      '<span class="option-letter">' + letters[pos] + "</span>" +
+      '<span class="option-text">' + esc(q.options[origIdx]) + "</span>" +
+    "</button>";
+  });
+
+  html += "</div>"; // .options
+
+  // Phản hồi ở chế độ luyện tập
+  if (isChecked) {
+    const ok = chosen === q.correct;
+    html += '<div class="feedback ' + (ok ? "ok" : "no") + '">' +
+      "<strong>" + (ok ? "✅ Chính xác !" : "❌ Chưa đúng") + "</strong>" +
+      "<p>Đáp án đúng: <b>" + esc(q.options[q.correct]) + "</b></p>" +
+      "<p>💡 " + esc(q.explanation) + "</p>" +
+    "</div>";
   }
 
-  html += '</div>';
+  html += "</div>"; // .question-card
 
-  html += '<div class="exam-actions">';
-  if(answered){
-    html += '<button class="btn" id="pNextBtn">' +
-              (i === total - 1 ? 'Hoàn thành' : 'Câu tiếp theo →') + '</button>';
-    html += '<button class="btn ghost" id="pRetryBtn">Làm lại câu này</button>';
-  }else{
-    html += '<button class="btn ghost" id="pSkipBtn" disabled>Hãy chọn một đáp án</button>';
+  // Nút điều hướng
+  if (isPractice) {
+    const canCheck = chosen !== undefined && !isChecked;
+    html += '<div class="quiz-actions">' +
+      '<button class="btn ghost" data-action="prev"' + (session.current === 0 ? " disabled" : "") + ">← Câu trước</button>" +
+      '<button class="btn primary" data-action="check"' + (canCheck ? "" : " disabled") + ">✔ Kiểm tra đáp án</button>" +
+      '<button class="btn ghost" data-action="next">Câu tiếp theo →</button>' +
+    "</div>";
+  } else {
+    const isLast = session.current === TOTAL - 1;
+    html += '<div class="quiz-actions">' +
+      '<button class="btn ghost" data-action="prev"' + (session.current === 0 ? " disabled" : "") + ">← Câu trước</button>" +
+      '<button class="btn ghost" data-action="next"' + (isLast ? " disabled" : "") + ">Câu tiếp theo →</button>" +
+    "</div>" +
+    '<div class="quiz-actions second">' +
+      '<button class="btn primary block" data-action="submit">📩 Nộp bài</button>' +
+    "</div>";
   }
-  html += '<button class="btn ghost" id="pExitBtn">Thoát luyện tập</button>';
-  html += '</div>';
 
-  box.innerHTML = html;
-
-  $$('#practiceRunner .option').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      if(practice.answered) return;
-      const idx = Number(btn.dataset.popt);
-      practice.chosen = idx;
-      practice.answered = true;
-      practice.answeredCount++;
-
-      const q2 = practice.questions[practice.index];
-      const ok = (idx === q2.correct);
-      if(ok) practice.correctCount++;
-
-      store.practiceStats.answered++;
-      if(ok) store.practiceStats.correct++;
-      saveStore();
-
-      renderPracticeRunner();
-    });
-  });
-
-  const toggle = $('#pTogglePassage');
-  if(toggle) toggle.addEventListener('click', function(){
-    practice.showPassage = !practice.showPassage;
-    renderPracticeRunner();
-  });
-
-  const nextBtn = $('#pNextBtn');
-  if(nextBtn) nextBtn.addEventListener('click', function(){
-    if(practice.index < practice.questions.length - 1){
-      practice.index++;
-      practice.chosen = null;
-      practice.answered = false;
-      renderPracticeRunner();
-      window.scrollTo(0, 0);
-    }else{
-      practice.finished = true;
-      renderPracticeRunner();
-      window.scrollTo(0, 0);
-    }
-  });
-
-  const retryBtn = $('#pRetryBtn');
-  if(retryBtn) retryBtn.addEventListener('click', function(){
-    if(practice.answered){
-      const q2 = practice.questions[practice.index];
-      const wasCorrect = (practice.chosen === q2.correct);
-      if(wasCorrect) practice.correctCount = Math.max(0, practice.correctCount - 1);
-      practice.answeredCount = Math.max(0, practice.answeredCount - 1);
-    }
-    practice.chosen = null;
-    practice.answered = false;
-    renderPracticeRunner();
-  });
-
-  const exitBtn = $('#pExitBtn');
-  if(exitBtn) exitBtn.addEventListener('click', function(){
-    showModal('Thoát luyện tập', 'Bạn có chắc muốn thoát phiên luyện tập hiện tại?',
-      function(){ practice = null; renderPracticeView(); }, 'Thoát');
-  });
+  app.innerHTML = html;
 }
 
-/* =====================================================================
-   PHẦN 11 — TIẾN ĐỘ HỌC TẬP
-   ===================================================================== */
-function formatDate(ts){
-  const d = new Date(ts);
-  const pad = function(n){ return n < 10 ? '0' + n : '' + n; };
-  return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear() +
-         ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
-}
+/* ---------- Chọn đáp án ---------- */
 
-function renderProgress(){
-  const box = $('#progressContent');
-  const history = store.examHistory.slice().reverse();
+function selectOption(origIdx) {
+  if (!session) return;
+  const item = session.items[session.current];
+  const q = getQuestion(item.qid);
 
-  let html = '';
+  if (session.mode === "practice" && session.checked && session.checked[q.id]) return;
 
-  const attempts = history.length;
-  const scores = history.map(function(h){ return h.score10; });
-  const best = scores.length ? Math.max.apply(null, scores) : 0;
-  const avg = scores.length ? (scores.reduce(function(a, b){ return a + b; }, 0) / scores.length) : 0;
-  const totalCorrect = history.reduce(function(a, h){ return a + h.correct; }, 0);
-  const totalWrong = history.reduce(function(a, h){ return a + h.wrong; }, 0);
+  session.answers[q.id] = origIdx;
+  save(LS.SESSION, session);
 
-  html += '<div class="card">' +
-    '<h2>Tiến độ học tập</h2>' +
-    '<div class="result-grid">' +
-      '<div class="result-box"><b>' + attempts + '</b><span>Lần làm bài</span></div>' +
-      '<div class="result-box"><b>' + best.toFixed(2) + '</b><span>Điểm cao nhất</span></div>' +
-      '<div class="result-box"><b>' + avg.toFixed(2) + '</b><span>Điểm trung bình</span></div>' +
-      '<div class="result-box ok"><b>' + totalCorrect + '</b><span>Tổng câu đúng</span></div>' +
-      '<div class="result-box no"><b>' + totalWrong + '</b><span>Tổng câu sai</span></div>' +
-    '</div>' +
-  '</div>';
-
-  html += '<div class="card">' +
-    '<h3>Thống kê luyện tập</h3>' +
-    '<div class="result-grid">' +
-      '<div class="result-box"><b>' + store.practiceStats.answered + '</b><span>Câu đã luyện</span></div>' +
-      '<div class="result-box ok"><b>' + store.practiceStats.correct + '</b><span>Câu trả lời đúng</span></div>' +
-      '<div class="result-box"><b>' +
-        (store.practiceStats.answered
-          ? (Math.round(store.practiceStats.correct / store.practiceStats.answered * 1000) / 10).toFixed(1) + '%'
-          : '0%') +
-      '</b><span>Độ chính xác</span></div>' +
-    '</div>' +
-  '</div>';
-
-  html += '<div class="card"><h3>Lịch sử thi thử</h3>';
-  if(history.length === 0){
-    html += '<div class="empty-state">Chưa có lần thi thử nào được ghi lại.</div>';
-  }else{
-    html += '<div class="table-wrap"><table><thead><tr>' +
-      '<th>#</th><th>Thời gian</th><th>Điểm</th><th>Đúng</th><th>Sai</th><th>Chưa TL</th>' +
-      '<th>Ngữ pháp + TV</th><th>Đọc hiểu</th>' +
-      '</tr></thead><tbody>';
-    history.forEach(function(h, idx){
-      html += '<tr>' +
-        '<td>' + (history.length - idx) + '</td>' +
-        '<td>' + formatDate(h.date) + '</td>' +
-        '<td><b>' + h.score10.toFixed(2) + '/10</b></td>' +
-        '<td style="color:var(--ok);font-weight:700;">' + h.correct + '</td>' +
-        '<td style="color:var(--no);font-weight:700;">' + h.wrong + '</td>' +
-        '<td style="color:var(--warn);font-weight:700;">' + h.unanswered + '</td>' +
-        '<td>' + h.gvCorrect + '/' + h.gvTotal + '</td>' +
-        '<td>' + h.rdCorrect + '/' + h.rdTotal + '</td>' +
-      '</tr>';
-    });
-    html += '</tbody></table></div>';
-  }
-  html += '</div>';
-
-  const wrongIds = Object.keys(store.wrongBank).filter(function(id){ return BANK_BY_ID[id]; });
-  wrongIds.sort(function(a, b){
-    return (store.wrongBank[b].last || 0) - (store.wrongBank[a].last || 0);
+  // Cập nhật DOM trực tiếp (không render lại toàn bộ để tránh nhảy trang)
+  document.querySelectorAll(".option").forEach(function (el) {
+    el.classList.toggle("selected", Number(el.dataset.orig) === origIdx);
   });
 
-  html += '<div class="card"><h3>Các câu trả lời sai</h3>';
-  if(wrongIds.length === 0){
-    html += '<div class="empty-state">Chưa có câu trả lời sai nào được ghi lại. Thật tuyệt!</div>';
-  }else{
-    html += '<p class="muted small">Danh sách các câu bạn đã trả lời sai trong chế độ thi thử.</p>';
-    wrongIds.forEach(function(id){
-      const q = BANK_BY_ID[id];
-      const info = store.wrongBank[id];
-      html += '<div class="review-item r-no">' +
-        '<div class="review-head">' +
-          '<span class="pill ' + (q.section === 'reading' ? 'pill-read' : '') + '">' +
-            (q.section === 'reading' ? 'Đọc hiểu' : 'Ngữ pháp + Từ vựng') + '</span>' +
-          '<span class="badge no">Sai ' + info.count + ' lần</span>' +
-          (info.last ? '<span class="muted small">Lần cuối: ' + formatDate(info.last) + '</span>' : '') +
-        '</div>' +
-        '<p class="qtext" style="font-size:1rem;">' + esc(q.question) + '</p>' +
-        '<div class="ans-line correct"><b>Đáp án đúng:</b> ' +
-          LETTERS[q.correct] + '. ' + esc(q.options[q.correct]) + '</div>' +
-        (q.explanation ? '<div class="explain-box"><b>Giải thích:</b> ' + esc(q.explanation) + '</div>' : '') +
-      '</div>';
-    });
+  const checkBtn = document.querySelector('[data-action="check"]');
+  if (checkBtn) checkBtn.disabled = false;
 
-    html += '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">' +
-      '<button class="btn" id="practiceWrongBtn" style="flex:1 1 200px;">Luyện tập lại câu sai</button>' +
-    '</div>';
-  }
-  html += '</div>';
+  updateProgressUI();
+}
 
-  html += '<div class="card">' +
-    '<h3>Quản lý dữ liệu</h3>' +
-    '<p class="muted small">Dữ liệu tiến độ được lưu trong trình duyệt của bạn (localStorage) và không gửi đi đâu cả.</p>' +
-    '<button class="btn danger" id="clearHistoryBtn">Xóa toàn bộ lịch sử học tập</button>' +
-  '</div>';
+function updateProgressUI() {
+  if (!session) return;
+  const answered = session.items.filter(function (it) {
+    return session.answers[it.qid] !== undefined;
+  }).length;
+  const fill = document.getElementById("progressFill");
+  const label = document.getElementById("answeredLabel");
+  if (fill) fill.style.width = (answered / TOTAL * 100) + "%";
+  if (label) label.innerHTML = "Đã trả lời: <b>" + answered + "</b> / " + TOTAL;
+}
 
-  box.innerHTML = html;
+/* ---------- Kiểm tra đáp án (chế độ luyện tập) ---------- */
 
-  const pwBtn = $('#practiceWrongBtn');
-  if(pwBtn) pwBtn.addEventListener('click', function(){
-    const pool = getPracticePool('wrong');
-    if(pool.length === 0){
-      showModal('Không có câu hỏi', 'Không có câu trả lời sai nào để luyện tập.', null, 'Đóng', true);
+function checkAnswer() {
+  if (!session || session.mode !== "practice") return;
+  const item = session.items[session.current];
+  const q = getQuestion(item.qid);
+  const chosen = session.answers[q.id];
+  if (chosen === undefined) return;
+
+  session.checked[q.id] = true;
+  save(LS.SESSION, session);
+
+  recordAnswer(q.id, chosen === q.correct);
+
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ---------- Điều hướng câu ---------- */
+
+function navigate(dir) {
+  if (!session) return;
+  const target = session.current + dir;
+
+  if (target < 0) return;
+
+  if (target >= session.items.length) {
+    if (session.mode === "practice") {
+      alert("🎉 Bạn đã hoàn thành phần luyện tập 28 câu!\nHãy xem lại thống kê để biết những câu mình hay sai nhé.");
+      showView("progress");
       return;
     }
-    let questions = pool.map(function(q){ return prepareQuestion(q, practiceSettings.shuffleOptions); });
-    if(practiceSettings.shuffleQuestions) shuffleArray(questions);
-    practice = {
-      mode: 'wrong',
-      questions: questions,
-      index: 0, chosen: null, answered: false,
-      correctCount: 0, answeredCount: 0,
-      showPassage: false, finished: false
-    };
-    showView('practice');
-    renderPracticeView();
-  });
+    return;
+  }
 
-  const clearBtn = $('#clearHistoryBtn');
-  if(clearBtn) clearBtn.addEventListener('click', function(){
-    showModal(
-      'Xóa lịch sử học tập',
-      'Toàn bộ lịch sử làm bài, điểm số và danh sách câu sai sẽ bị xóa vĩnh viễn.<br>Bạn có chắc chắn?',
-      function(){
-        store = defaultStore();
-        saveStore();
-        renderProgress();
-      },
-      'Xóa vĩnh viễn'
-    );
-  });
+  session.current = target;
+  save(LS.SESSION, session);
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-/* =====================================================================
-   PHẦN 12 — KHỞI TẠO
-   ===================================================================== */
-(function init(){
-  renderHome();
-  renderExamIntro();
-  renderPracticeMenu();
-  showView('home');
+/* ---------- Ghi nhận câu trả lời (thống kê) ---------- */
 
-  console.log('[French A1 Quiz] Ngân hàng câu hỏi:',
-    'Ngữ pháp + Từ vựng =', GRAMMAR_BANK.length,
-    '| Đọc hiểu =', READING_BANK.length,
-    '| Tổng =', FULL_BANK.length);
-})();
+function recordAnswer(qid, isCorrect) {
+  const stats = load(LS.WRONG, {});
+  const s = stats[qid] || { attempts: 0, wrong: 0 };
+  s.attempts += 1;
+  if (!isCorrect) s.wrong += 1;
+  stats[qid] = s;
+  save(LS.WRONG, stats);
+}
+
+function recordAnswerBatch(list) {
+  const stats = load(LS.WRONG, {});
+  list.forEach(function (entry) {
+    const s = stats[entry.qid] || { attempts: 0, wrong: 0 };
+    s.attempts += 1;
+    if (!entry.isCorrect) s.wrong += 1;
+    stats[entry.qid] = s;
+  });
+  save(LS.WRONG, stats);
+}
+
+/* ---------- Nộp bài ---------- */
+
+function submitTest() {
+  if (!session || session.mode === "practice") return;
+
+  const unanswered = session.items.filter(function (it) {
+    return session.answers[it.qid] === undefined;
+  }).length;
+
+  if (unanswered > 0) {
+    const ok = confirm("⚠️ Bạn còn " + unanswered + " câu chưa trả lời.\nBạn vẫn muốn nộp bài chứ?");
+    if (!ok) return;
+  }
+
+  const details = session.items.map(function (it) {
+    const q = getQuestion(it.qid);
+    const ans = session.answers[q.id];
+    const isAnswered = ans !== undefined;
+    const isCorrect = isAnswered && ans === q.correct;
+    return {
+      qid: q.id,
+      answered: isAnswered,
+      chosen: isAnswered ? ans : null,
+      correct: q.correct,
+      isCorrect: isCorrect
+    };
+  });
+
+  const correctCount = details.filter(function (d) { return d.isCorrect; }).length;
+  const answeredCount = details.filter(function (d) { return d.answered; }).length;
+  const wrongCount = answeredCount - correctCount;
+  const unansweredCount = TOTAL - answeredCount;
+
+  const score = Math.round((correctCount / TOTAL) * 10 * 100) / 100;
+  const percent = Math.round((correctCount / TOTAL) * 1000) / 10;
+
+  const result = {
+    date: new Date().toISOString(),
+    mode: session.mode,
+    total: TOTAL,
+    correct: correctCount,
+    wrong: wrongCount,
+    unanswered: unansweredCount,
+    score: score,
+    percent: percent,
+    details: details
+  };
+
+  // Lưu lịch sử
+  const history = load(LS.HISTORY, []);
+  history.push({
+    date: result.date,
+    mode: result.mode,
+    score: score,
+    correct: correctCount,
+    wrong: wrongCount,
+    unanswered: unansweredCount,
+    percent: percent
+  });
+  save(LS.HISTORY, history);
+
+  // Lưu thống kê câu sai
+  recordAnswerBatch(details.filter(function (d) { return d.answered; }).map(function (d) {
+    return { qid: d.qid, isCorrect: d.isCorrect };
+  }));
+
+  // Lưu kết quả
+  save(LS.RESULT, result);
+  lastResult = result;
+
+  session = null;
+  remove(LS.SESSION);
+
+  showView("result");
+}
+
+/* ============================================================
+   9. MÀN HÌNH KẾT QUẢ
+   ============================================================ */
+
+function renderResult() {
+  if (!lastResult) { showView("home"); return; }
+  const r = lastResult;
+
+  const modeLabel =
+    r.mode === "full" ? "Làm toàn bộ đề" :
+    r.mode === "random" ? "Đề ngẫu nhiên" : "Bài kiểm tra";
+
+  let html = '<div class="page-head">' +
+    "<h2>📊 Kết quả bài làm</h2>" +
+    "<p>" + modeLabel + " · " + formatDate(r.date) + "</p>" +
+  "</div>";
+
+  html += '<div class="result-hero">' +
+    '<div class="score-circle" style="background:conic-gradient(#4a86c8 ' + r.percent + '%, #e2eefb ' + r.percent + '% 100%)">' +
+      '<div class="score-inner">' +
+        '<span class="score-num">' + r.score.toFixed(2) + "</span>" +
+        '<span class="score-den">/ 10 điểm</span>' +
+      "</div>" +
+    "</div>" +
+    '<div class="result-stats">' +
+      '<div class="stat ok"><b>' + r.correct + "</b><span>Câu đúng</span></div>" +
+      '<div class="stat no"><b>' + r.wrong + "</b><span>Câu sai</span></div>" +
+      '<div class="stat na"><b>' + r.unanswered + "</b><span>Chưa trả lời</span></div>" +
+      '<div class="stat pc"><b>' + r.percent + "%</b><span>Độ chính xác</span></div>" +
+    "</div>" +
+  "</div>";
+
+  html += '<div class="page-actions">' +
+    '<button class="btn primary" data-action="home">🏠 Về trang chủ</button>' +
+    '<button class="btn ghost" data-action="progress">📈 Xem thống kê</button>' +
+    '<button class="btn ghost" data-action="review">📚 Xem lại đáp án</button>' +
+  "</div>";
+
+  html += '<h3 class="section-title">Chi tiết từng câu</h3>';
+
+  r.details.forEach(function (d) {
+    const q = getQuestion(d.qid);
+    let cls = "detail ";
+    let tagCls, tagText;
+    if (!d.answered) { cls += "na"; tagCls = "na"; tagText = "Chưa trả lời"; }
+    else if (d.isCorrect) { cls += "ok"; tagCls = "ok"; tagText = "Đúng"; }
+    else { cls += "no"; tagCls = "no"; tagText = "Sai"; }
+
+    const userAnswer = d.answered
+      ? esc(q.options[d.chosen])
+      : "<i>(không trả lời)</i>";
+
+    html += '<div class="' + cls + '">' +
+      '<div class="detail-head">' +
+        '<span class="badge">Câu ' + q.id + "</span>" +
+        '<span class="pill part">' + (q.part === 1 ? "Partie I" : "Partie II") + "</span>" +
+        '<span class="tag ' + tagCls + '">' + tagText + "</span>" +
+      "</div>" +
+      '<p class="detail-q">' + esc(q.question) + "</p>" +
+      '<p class="detail-line"><span class="lbl">Bạn chọn:</span> ' + userAnswer + "</p>" +
+      '<p class="detail-line"><span class="lbl">Đáp án đúng:</span> <b>' + esc(q.options[q.correct]) + "</b></p>" +
+      '<p class="exp">💡 ' + esc(q.explanation) + "</p>" +
+    "</div>";
+  });
+
+  app.innerHTML = html;
+}
+
+/* ============================================================
+   10. MÀN HÌNH XEM LẠI TOÀN BỘ
+   ============================================================ */
+
+function renderReview() {
+  let html = '<div class="page-head">' +
+    "<h2>📚 Xem lại toàn bộ câu hỏi</h2>" +
+    "<p>28 câu hỏi kèm đáp án đúng và giải thích ngắn gọn bằng tiếng Việt.</p>" +
+  "</div>";
+
+  html += '<details class="passage" open>' +
+    "<summary>📖 Texte : Vũng Tàu – une belle ville au bord de la mer</summary>" +
+    '<div class="passage-body">' + READING_HTML + "</div>" +
+  "</details>";
+
+  const letters = ["A", "B", "C", "D"];
+
+  QUESTIONS.forEach(function (q) {
+    html += '<div class="review-card">' +
+      '<div class="review-head">' +
+        '<span class="badge">Câu ' + q.id + "</span>" +
+        '<span class="pill part">' + (q.part === 1 ? "Partie I · Grammaire & Vocabulaire" : "Partie II · Compréhension écrite") + "</span>" +
+      "</div>" +
+      '<p class="review-q">' + esc(q.question) + "</p>" +
+      '<ul class="review-options">';
+
+    q.options.forEach(function (opt, i) {
+      html += '<li class="' + (i === q.correct ? "correct" : "") + '">' +
+        '<span class="option-letter">' + letters[i] + "</span>" +
+        "<span>" + esc(opt) + "</span>" +
+        (i === q.correct ? '<span class="check">✔</span>' : "") +
+      "</li>";
+    });
+
+    html += "</ul>" +
+      '<p class="exp">💡 ' + esc(q.explanation) + "</p>" +
+    "</div>";
+  });
+
+  html += '<div class="page-actions">' +
+    '<button class="btn primary" data-action="home">🏠 Về trang chủ</button>' +
+  "</div>";
+
+  app.innerHTML = html;
+}
+
+/* ============================================================
+   11. MÀN HÌNH THỐNG KÊ
+   ============================================================ */
+
+function renderProgress() {
+  const history = load(LS.HISTORY, []);
+  const stats = load(LS.WRONG, {});
+
+  const totalAttempts = history.length;
+  const best = totalAttempts ? Math.max.apply(null, history.map(function (h) { return h.score; })) : null;
+  const avg = totalAttempts
+    ? history.reduce(function (s, h) { return s + h.score; }, 0) / totalAttempts
+    : null;
+
+  let totalDone = 0;
+  Object.keys(stats).forEach(function (k) { totalDone += stats[k].attempts; });
+
+  let html = '<div class="page-head">' +
+    "<h2>📈 Thống kê &amp; tiến độ</h2>" +
+    "<p>Dữ liệu được lưu tự động trong trình duyệt của bạn (localStorage).</p>" +
+  "</div>";
+
+  html += '<div class="stats-grid">' +
+    '<div class="big-stat"><b>' + totalAttempts + "</b><span>Số lần làm bài</span></div>" +
+    '<div class="big-stat"><b>' + (best === null ? "—" : best.toFixed(2)) + "</b><span>Điểm cao nhất</span></div>" +
+    '<div class="big-stat"><b>' + (avg === null ? "—" : avg.toFixed(2)) + "</b><span>Điểm trung bình</span></div>" +
+    '<div class="big-stat"><b>' + totalDone + "</b><span>Tổng câu đã làm</span></div>" +
+  "</div>";
+
+  // Câu hỏi thường trả lời sai
+  html += '<h3 class="section-title">⚠️ Những câu bạn thường trả lời sai</h3>';
+
+  const wrongList = Object.keys(stats)
+    .map(function (k) { return { qid: Number(k), data: stats[k] }; })
+    .filter(function (x) { return x.data.wrong > 0; })
+    .sort(function (a, b) { return b.data.wrong - a.data.wrong; })
+    .slice(0, 8);
+
+  if (wrongList.length === 0) {
+    html += '<div class="empty">Chưa có dữ liệu câu sai. Hãy làm bài để hệ thống ghi nhận nhé! 🌱</div>';
+  } else {
+    wrongList.forEach(function (x) {
+      const q = getQuestion(x.qid);
+      if (!q) return;
+      html += '<div class="wrong-item">' +
+        '<p class="q">Câu ' + q.id + " : " + esc(q.question) + "</p>" +
+        '<p class="meta">Sai <b>' + x.data.wrong + "</b> / " + x.data.attempts + " lần · " +
+          "Đáp án đúng: <b>" + esc(q.options[q.correct]) + "</b></p>" +
+      "</div>";
+    });
+  }
+
+  // Lịch sử làm bài
+  html += '<h3 class="section-title">🕘 Lịch sử làm bài</h3>';
+
+  if (history.length === 0) {
+    html += '<div class="empty">Chưa có lần làm bài nào được lưu.</div>';
+  } else {
+    const recent = history.slice().reverse().slice(0, 10);
+    recent.forEach(function (h) {
+      const modeLabel =
+        h.mode === "full" ? "📝 Toàn bộ đề" :
+        h.mode === "random" ? "🔀 Ngẫu nhiên" : "Bài kiểm tra";
+      html += '<div class="history-row">' +
+        "<span>" + modeLabel + ' <span class="date">· ' + formatDate(h.date) + "</span></span>" +
+        '<span><span class="score">' + h.score.toFixed(2) + "/10</span> " +
+        '<span class="date">(' + h.correct + " đúng · " + h.wrong + " sai · " + h.unanswered + " bỏ trống)</span></span>" +
+      "</div>";
+    });
+  }
+
+  html += '<div class="page-actions">' +
+    '<button class="btn primary" data-action="home">🏠 Về trang chủ</button>' +
+    '<button class="btn danger" data-action="clear-data">🗑 Xóa toàn bộ dữ liệu</button>' +
+  "</div>";
+
+  app.innerHTML = html;
+}
+
+function clearData() {
+  if (!confirm("Bạn có chắc muốn xóa toàn bộ lịch sử làm bài, thống kê và tiến độ?")) return;
+  remove(LS.HISTORY);
+  remove(LS.WRONG);
+  remove(LS.SESSION);
+  remove(LS.RESULT);
+  session = null;
+  lastResult = null;
+  render();
+}
+
+/* ============================================================
+   12. CHẠY ỨNG DỤNG
+   ============================================================ */
+
+init();
 </script>
 </body>
 </html>
