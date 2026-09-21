@@ -6,41 +6,27 @@
 <title>French A1 Learning &amp; Quiz</title>
 <style>
   :root{
-    --bg1:#eef5fd;
-    --bg2:#e1eefb;
-    --card:#ffffff;
-    --primary:#6ba3e0;
-    --primary-d:#4c88cc;
-    --primary-l:#dceafa;
-    --text:#2c3e50;
-    --muted:#6b7f95;
-    --border:#d6e4f2;
-    --ok:#5cb385;
-    --ok-bg:#e7f7ef;
-    --no:#e08585;
-    --no-bg:#fdeceb;
-    --warn:#dda644;
-    --warn-bg:#fdf4e3;
-    --radius:14px;
-    --shadow:0 4px 18px rgba(107,163,224,.14);
+    --bg1:#eef5fd; --bg2:#e1eefb; --card:#ffffff;
+    --primary:#6ba3e0; --primary-d:#4c88cc; --primary-l:#dceafa;
+    --text:#2c3e50; --muted:#6b7f95; --border:#d6e4f2;
+    --ok:#5cb385; --ok-bg:#e7f7ef;
+    --no:#e08585; --no-bg:#fdeceb;
+    --warn:#dda644; --warn-bg:#fdf4e3;
+    --radius:14px; --shadow:0 4px 18px rgba(107,163,224,.14);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
     background:linear-gradient(165deg,var(--bg1) 0%,var(--bg2) 100%);
-    background-attachment:fixed;
-    color:var(--text);
-    min-height:100vh;
-    line-height:1.55;
-    font-size:16px;
+    background-attachment:fixed; color:var(--text);
+    min-height:100vh; line-height:1.55; font-size:16px;
     -webkit-text-size-adjust:100%;
   }
   .topbar{
     position:sticky;top:0;z-index:60;
     background:rgba(255,255,255,.94);
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
     border-bottom:1px solid var(--border);
   }
   .topbar-inner{
@@ -215,7 +201,6 @@
     border-radius:12px;padding:16px;font-size:.94rem;line-height:1.75;color:#31485e;
   }
   .passage.open{display:block;}
-  .passage b{color:var(--primary-d);}
 
   .feedback{border-radius:12px;padding:16px;margin-top:16px;border:1.5px solid;font-size:.94rem;}
   .feedback.fb-ok{background:var(--ok-bg);border-color:#bfe5d1;}
@@ -336,7 +321,7 @@
   <section class="view active" id="view-home">
     <div class="card hero">
       <h1>French A1 Learning &amp; Quiz</h1>
-      <p class="lead">Ứng dụng ôn luyện tiếng Pháp trình độ A1 với hai chế độ: <b>Thi thử</b> (37 câu, không giới hạn thời gian) và <b>Luyện tập</b> (phản hồi và giải thích ngay sau mỗi câu).</p>
+      <p class="lead">Ứng dụng ôn luyện tiếng Pháp trình độ A1 với hai chế độ: <b>Thi thử</b> (không giới hạn thời gian) và <b>Luyện tập</b> (phản hồi và giải thích ngay sau mỗi câu).</p>
       <div class="hero-stats">
         <div class="stat"><b id="homeTotal">0</b><span>Câu hỏi</span></div>
         <div class="stat"><b id="homeGv">0</b><span>Ngữ pháp + Từ vựng</span></div>
@@ -408,10 +393,15 @@
    PHẦN 1 — DỮ LIỆU
    ===================================================================== */
 
-const READING_PASSAGE =
-`Vũng Tàu – une belle ville au bord de la mer
+const READING_PASSAGE = `Vũng Tàu – une belle ville au bord de la mer
 
-Vũng Tàu est une belle ville du sud du Vietnam. Elle est au bord de la mer. C'est une destination très connue pour les touristes. À Vũng Tàu, il y a de belles plages. Les touristes aiment se promener au bord de la mer, se baigner et regarder le coucher du soleil. La ville possède aussi plusieurs lieux historiques. On peut visiter un musée pour découvrir l'histoire de Vũng Tàu. Un monument intéressant est la tour Tam Thắng. Elle est située près de la mer. Elle est un symbole de la ville. On peut aussi visiter le Palais Blanc. C'est un ancien bâtiment construit sur la montagne Tao Phùng. À l'époque coloniale, le gouverneur général Paul Doumer y a séjourné. Aujourd'hui, le Palais Blanc est un lieu historique et touristique. Vũng Tàu est donc une ville intéressante. On peut y découvrir la mer, les plages, les montagnes, les musées et les monuments historiques. C'est une belle destination pour un voyage au Vietnam.`;
+Vũng Tàu est une belle ville du sud du Vietnam. Elle est au bord de la mer. C'est une destination très connue pour les touristes. À Vũng Tàu, il y a de belles plages. Les touristes aiment se promener au bord de la mer, se baigner et regarder le coucher du soleil.
+
+La ville possède aussi plusieurs lieux historiques. On peut visiter un musée pour découvrir l'histoire de Vũng Tàu. Un monument intéressant est la tour Tam Thắng. Elle est située près de la mer. Elle est un symbole de la ville.
+
+On peut aussi visiter le Palais Blanc. C'est un ancien bâtiment construit sur la montagne Tao Phùng. À l'époque coloniale, le gouverneur général Paul Doumer y a séjourné. Aujourd'hui, le Palais Blanc est un lieu historique et touristique.
+
+Vũng Tàu est donc une ville intéressante. On peut y découvrir la mer, les plages, les montagnes, les musées et les monuments historiques. C'est une belle destination pour un voyage au Vietnam.`;
 
 const READING_QUESTIONS = [
   {
@@ -420,13 +410,13 @@ const READING_QUESTIONS = [
     question: 'Où se trouve Vũng Tàu ?',
     translation: 'Vũng Tàu nằm ở đâu?',
     options: [
-      'Au nord du Vietnam.',
-      'Au sud du Vietnam.',
-      'Au centre du Vietnam.',
-      'Dans les montagnes.'
+      'Dans le nord du Vietnam',
+      'Dans le sud du Vietnam',
+      'Dans le centre du Vietnam',
+      'Dans les montagnes'
     ],
     correct: 1,
-    explanation: 'Bài đọc viết: « Vũng Tàu est une belle ville du sud du Vietnam. » → Vũng Tàu là một thành phố ở miền Nam Việt Nam. Vậy đáp án đúng là B. Au sud du Vietnam.',
+    explanation: 'Bài đọc viết: « Vũng Tàu est une belle ville du sud du Vietnam. » → Vũng Tàu là thành phố ở miền Nam Việt Nam. Đáp án đúng là B.',
     evidence: 'Vũng Tàu est une belle ville du sud du Vietnam.'
   },
   {
@@ -434,14 +424,9 @@ const READING_QUESTIONS = [
     topic: 'Đọc hiểu – Đặc điểm thành phố',
     question: "Qu'est-ce qu'on trouve à Vũng Tàu ?",
     translation: 'Người ta tìm thấy gì ở Vũng Tàu?',
-    options: [
-      'De belles plages.',
-      'Des déserts.',
-      'Des glaciers.',
-      'Des volcans.'
-    ],
+    options: ['Des plages', 'Des déserts', 'Des glaciers', 'Des volcans'],
     correct: 0,
-    explanation: 'Bài đọc viết: « À Vũng Tàu, il y a de belles plages. » → Ở Vũng Tàu có những bãi biển đẹp. Các phương án còn lại (sa mạc, sông băng, núi lửa) đều không xuất hiện trong bài.',
+    explanation: 'Bài đọc viết: « À Vũng Tàu, il y a de belles plages. » → Ở Vũng Tàu có những bãi biển đẹp. Đáp án đúng là A.',
     evidence: 'À Vũng Tàu, il y a de belles plages.'
   },
   {
@@ -450,13 +435,13 @@ const READING_QUESTIONS = [
     question: 'Que peuvent faire les touristes à la plage ?',
     translation: 'Du khách có thể làm gì ở bãi biển?',
     options: [
-      'Faire du ski.',
-      'Faire du patinage.',
-      'Se baigner.',
-      'Faire du camping dans la neige.'
+      'Faire du ski',
+      'Faire du patinage',
+      'Se baigner',
+      'Faire du camping dans la neige'
     ],
     correct: 2,
-    explanation: 'Bài đọc viết: « Les touristes aiment se promener au bord de la mer, se baigner et regarder le coucher du soleil. » → Du khách thích đi dạo bên bờ biển, tắm biển và ngắm hoàng hôn. « Se baigner » = tắm biển. Đáp án đúng là C.',
+    explanation: 'Bài đọc viết: « Les touristes aiment se promener au bord de la mer, se baigner et regarder le coucher du soleil. » → « Se baigner » = tắm biển. Đáp án đúng là C.',
     evidence: 'Les touristes aiment se promener au bord de la mer, se baigner et regarder le coucher du soleil.'
   },
   {
@@ -464,14 +449,9 @@ const READING_QUESTIONS = [
     topic: 'Đọc hiểu – Địa danh',
     question: "Qu'est-ce que la tour Tam Thắng ?",
     translation: 'Tháp Tam Thắng là gì?',
-    options: [
-      'Un musée.',
-      'Un hôtel.',
-      'Un monument.',
-      'Une plage.'
-    ],
+    options: ['Un musée', 'Un hôtel', 'Un monument', 'Une plage'],
     correct: 2,
-    explanation: 'Bài đọc viết: « Un monument intéressant est la tour Tam Thắng. » → Một di tích thú vị là tháp Tam Thắng. Vậy tháp Tam Thắng là một « monument » (di tích / công trình tưởng niệm). Đáp án đúng là C.',
+    explanation: 'Bài đọc viết: « Un monument intéressant est la tour Tam Thắng. » → Tháp Tam Thắng là một « monument » (di tích). Đáp án đúng là C.',
     evidence: 'Un monument intéressant est la tour Tam Thắng.'
   },
   {
@@ -480,13 +460,13 @@ const READING_QUESTIONS = [
     question: 'Où se trouve le Palais Blanc ?',
     translation: 'Bạch Dinh (Palais Blanc) nằm ở đâu?',
     options: [
-      'Sur la montagne Tao Phùng.',
-      'Au milieu de la mer.',
-      'Dans un désert.',
-      'Dans une forêt.'
+      'Sur la montagne Tao Phùng',
+      'Au milieu de la mer',
+      'Dans un désert',
+      'Dans une forêt'
     ],
     correct: 0,
-    explanation: "Bài đọc viết: « On peut aussi visiter le Palais Blanc. C'est un ancien bâtiment construit sur la montagne Tao Phùng. » → Bạch Dinh được xây trên núi Tao Phùng. Đáp án đúng là A.",
+    explanation: "Bài đọc viết: « C'est un ancien bâtiment construit sur la montagne Tao Phùng. » → Bạch Dinh được xây trên núi Tao Phùng. Đáp án đúng là A.",
     evidence: "C'est un ancien bâtiment construit sur la montagne Tao Phùng."
   },
   {
@@ -495,13 +475,13 @@ const READING_QUESTIONS = [
     question: 'Qui est Paul Doumer ?',
     translation: 'Paul Doumer là ai?',
     options: [
-      'Un touriste.',
-      'Un artiste vietnamien.',
-      'Un ancien gouverneur général.',
-      'Un pêcheur.'
+      'Un touriste',
+      'Un artiste vietnamien',
+      'Un ancien gouverneur général',
+      'Un pêcheur'
     ],
     correct: 2,
-    explanation: "Bài đọc viết: « À l'époque coloniale, le gouverneur général Paul Doumer y a séjourné. » → Paul Doumer là một cựu Toàn quyền (gouverneur général). Đáp án đúng là C.",
+    explanation: "Bài đọc viết: « À l'époque coloniale, le gouverneur général Paul Doumer y a séjourné. » → Paul Doumer là một cựu Toàn quyền. Đáp án đúng là C.",
     evidence: "À l'époque coloniale, le gouverneur général Paul Doumer y a séjourné."
   },
   {
@@ -510,10 +490,10 @@ const READING_QUESTIONS = [
     question: 'Que peut-on découvrir dans un musée à Vũng Tàu ?',
     translation: 'Người ta có thể khám phá điều gì trong một bảo tàng ở Vũng Tàu?',
     options: [
-      "L'histoire de la ville.",
-      'Des recettes de cuisine.',
-      'La météo.',
-      'Des animaux sauvages.'
+      "L'histoire de la ville",
+      'Des recettes de cuisine',
+      'La météo',
+      'Des animaux sauvages'
     ],
     correct: 0,
     explanation: "Bài đọc viết: « On peut visiter un musée pour découvrir l'histoire de Vũng Tàu. » → Có thể tham quan bảo tàng để tìm hiểu lịch sử của Vũng Tàu. Đáp án đúng là A.",
@@ -522,23 +502,280 @@ const READING_QUESTIONS = [
 ];
 
 /* =====================================================================
-   30 CÂU HỎI NGỮ PHÁP + TỪ VỰNG
-   ---------------------------------------------------------------------
-   ⚠️ DÁN 30 CÂU HỎI GỐC CỦA BẠN VÀO MẢNG DƯỚI ĐÂY.
-   Định dạng mỗi câu:
-   {
-     id: 'g01',
-     type: 'grammar',              // hoặc 'vocab'
-     topic: 'Mạo từ và tính từ chỉ định',
-     question: '.....',
-     options: ['A...', 'B...', 'C...', 'D...'],
-     correct: 0,                   // 0=A, 1=B, 2=C, 3=D
-     explanation: 'Giải thích bằng tiếng Việt...',
-     translation: 'Dịch nghĩa câu hỏi...'
-   }
+   24 CÂU HỎI NGỮ PHÁP + TỪ VỰNG (giữ nguyên nội dung gốc, kể cả câu 22, 23 trùng)
    ===================================================================== */
 const GRAMMAR_QUESTIONS = [
-  // ==== DÁN 30 CÂU HỎI CỦA BẠN VÀO ĐÂY ====
+  {
+    id: 'g01', type: 'grammar',
+    topic: 'Tính từ chỉ định',
+    question: "J'aime bien ____ petit village de montagne.",
+    translation: 'Tôi rất thích ngôi làng nhỏ trên núi này.',
+    options: ['cette', 'ce', 'cet', 'ces'],
+    correct: 1,
+    explanation: '"petit village" là danh từ giống đực số ít, bắt đầu bằng phụ âm → dùng "ce". "Cette" cho giống cái, "cet" cho giống đực bắt đầu bằng nguyên âm, "ces" cho số nhiều.'
+  },
+  {
+    id: 'g02', type: 'vocab',
+    topic: 'Từ vựng – Chữ viết tắt',
+    question: "Qu'est-ce que « sdb » veut dire ?",
+    translation: '« sdb » có nghĩa là gì?',
+    options: ['chambre', 'park', 'salle de bains', 'étage'],
+    correct: 2,
+    explanation: '« sdb » là viết tắt của « salle de bains » (phòng tắm). Đáp án đúng là C.'
+  },
+  {
+    id: 'g03', type: 'grammar',
+    topic: 'Giới từ địa điểm',
+    question: "Allez jusqu'… pont, traversez et continuez jusqu'… opéra.",
+    translation: 'Hãy đi đến cây cầu, băng qua và tiếp tục đến nhà hát opera.',
+    options: ['au / à la', "à la / à l'", "au / à l'", 'à la / au'],
+    correct: 2,
+    explanation: '« pont » giống đực số ít → à + le = au. « opéra » bắt đầu bằng nguyên âm → à + l\' = à l\'. Vậy đáp án đúng là C. au / à l\'.'
+  },
+  {
+    id: 'g04', type: 'grammar',
+    topic: 'Đặt câu hỏi và trả lời',
+    question: "Écrivez une question et une réponse correctes : « Vous-aller-école-rollers »",
+    translation: 'Viết một câu hỏi và một câu trả lời đúng với các từ cho sẵn.',
+    options: [
+      "Vous allez à l'école comment ? — J'y vais en rollers.",
+      "Vous aller à l'école comment ? — J'y vais en rollers.",
+      "Vous allez à l'école comment ? — J'y vais à rollers.",
+      "Vous allez l'école comment ? — J'y vais en rollers."
+    ],
+    correct: 0,
+    explanation: 'Chia đúng: « vous allez ». Giới từ: « à l\'école ». Phương tiện: « en rollers ». Đáp án đúng là A.'
+  },
+  {
+    id: 'g05', type: 'grammar',
+    topic: 'Cấu trúc câu với avoir',
+    question: "C'est un restaurant avec l'air conditionné.",
+    translation: 'Đó là một nhà hàng có máy lạnh.',
+    options: [
+      "Ce restaurant est l'air conditionné.",
+      "Cette restaurant a l'air conditionné.",
+      "Ce restaurant a l'air conditionné.",
+      "Ce restaurant ont l'air conditionné."
+    ],
+    correct: 2,
+    explanation: '« restaurant » giống đực số ít → « Ce ». Động từ phải là « a » (avoir), không phải « est ». Đáp án đúng là C.'
+  },
+  {
+    id: 'g06', type: 'grammar',
+    topic: 'Từ để hỏi',
+    question: "Ces chaussures coûtent ____, s'il vous plaît ?",
+    translation: 'Đôi giày này giá bao nhiêu ạ?',
+    options: ['Comment', 'Combien', 'Quels', 'Quelles'],
+    correct: 1,
+    explanation: 'Hỏi giá dùng « Combien » (bao nhiêu). Đáp án đúng là B.'
+  },
+  {
+    id: 'g07', type: 'grammar',
+    topic: 'Đại từ y',
+    question: 'Tu passes à la poste ?',
+    translation: 'Bạn có ghé bưu điện không?',
+    options: ["Oui, j'y passe.", "Oui, tu y passes.", "Oui, je y passe.", "Oui, t'y passes."],
+    correct: 0,
+    explanation: 'Trả lời với chủ ngữ « je », đại từ « y » thay cho « à la poste ». Khi « je » + « y » → « j\'y ». Đáp án đúng là A.'
+  },
+  {
+    id: 'g08', type: 'grammar',
+    topic: 'Đại từ nhân xưng',
+    question: 'Ma mère habite avec ma femme et moi.',
+    translation: 'Mẹ tôi sống với vợ tôi và tôi.',
+    options: [
+      'Ma mère habite avec elle.',
+      'Ma mère habite avec eux.',
+      'Ma mère habite avec nous.',
+      'Ma mère habite avec elles.'
+    ],
+    correct: 2,
+    explanation: '« ma femme et moi » = chúng tôi → đại từ « nous ». Đáp án đúng là C.'
+  },
+  {
+    id: 'g09', type: 'grammar',
+    topic: 'Cấu trúc Ce sont',
+    question: 'Ces grands hôtels ont de belles plages.',
+    translation: 'Những khách sạn lớn này có những bãi biển đẹp.',
+    options: [
+      "C'est des grands hôtels avec de belles plages.",
+      'Ce sont des grands hôtels avec de belles plages.',
+      "C'est des grands hôtels ont de belles plages.",
+      'Ce sont des grands hôtels ont de belles plages.'
+    ],
+    correct: 1,
+    explanation: 'Số nhiều dùng « Ce sont », và phải chuyển « ont » thành « avec ». Đáp án đúng là B.'
+  },
+  {
+    id: 'g10', type: 'grammar',
+    topic: 'Từ để hỏi',
+    question: '____ est le prix de cette robe ?',
+    translation: 'Giá của chiếc váy này là bao nhiêu?',
+    options: ['Comment', 'Quel', 'Quelle', 'Combien'],
+    correct: 1,
+    explanation: '« prix » giống đực số ít → dùng « Quel ». Cấu trúc đúng: « Quel est le prix… ». Đáp án đúng là B.'
+  },
+  {
+    id: 'g11', type: 'grammar',
+    topic: 'Cấu trúc C\'est un…',
+    question: 'Cet appartement a une belle terrasse.',
+    translation: 'Căn hộ này có một sân thượng đẹp.',
+    options: [
+      "C'est un appartement avec un belle terrasse.",
+      "C'est un appartement avec une belle terrasse.",
+      "C'est un appartement a avec une belle terrasse.",
+      "C'est une appartement avec une belle terrasse."
+    ],
+    correct: 1,
+    explanation: '« appartement » giống đực → « un appartement ». « terrasse » giống cái → « une belle terrasse ». Đáp án đúng là B.'
+  },
+  {
+    id: 'g12', type: 'grammar',
+    topic: 'Giới từ địa điểm',
+    question: 'Cantho se trouve … Vietnam.',
+    translation: 'Cần Thơ nằm ở … Việt Nam.',
+    options: ['au sud du', 'au sud de', 'au nord du', "à l'est du"],
+    correct: 0,
+    explanation: 'Cần Thơ nằm ở miền Nam Việt Nam. « de + le » = « du ». Vậy « au sud du Vietnam ». Đáp án đúng là A.'
+  },
+  {
+    id: 'g13', type: 'grammar',
+    topic: 'Giới từ địa điểm',
+    question: 'Elle va ____ gare.',
+    translation: 'Cô ấy đi đến nhà ga.',
+    options: ['à la', "à l'", 'au', 'à'],
+    correct: 0,
+    explanation: '« gare » giống cái số ít → « à la gare ». Đáp án đúng là A.'
+  },
+  {
+    id: 'g14', type: 'grammar',
+    topic: 'Câu mệnh lệnh',
+    question: "Mettez à l'impératif « Passer devant la poste » à la deuxième personne (Vous).",
+    translation: 'Chuyển sang mệnh lệnh với ngôi « Vous ».',
+    options: [
+      'Passons devant la poste.',
+      'Passes devant la poste.',
+      'Passez devant la poste.',
+      'Passe devant la poste.'
+    ],
+    correct: 2,
+    explanation: 'Mệnh lệnh ngôi « vous » với động từ « passer » (nhóm 1) → « Passez ». Đáp án đúng là C.'
+  },
+  {
+    id: 'g15', type: 'grammar',
+    topic: 'Cách diễn đạt lại câu hỏi',
+    question: 'Il y a combien de chambre dans votre maison ?',
+    translation: 'Có bao nhiêu phòng ngủ trong nhà của bạn?',
+    options: [
+      'Il y a combien de chambre chez moi ?',
+      'Il y a combien de chambre chez vous ?',
+      'Il y a combien de chambre chez toi ?',
+      'Il y a combien de chambre chez elle ?'
+    ],
+    correct: 1,
+    explanation: '« votre maison » là ngôi « vous » (lịch sự) → khi diễn đạt lại dùng « chez vous ». Đáp án đúng là B.'
+  },
+  {
+    id: 'g16', type: 'grammar',
+    topic: 'Từ để hỏi',
+    question: '« ____ vêtements est-ce que tu aimes ? »',
+    translation: 'Bạn thích những bộ quần áo nào?',
+    options: ['Comment', 'Combien', 'Quels', 'Quelles'],
+    correct: 2,
+    explanation: '« vêtements » giống đực số nhiều → « Quels ». Đáp án đúng là C.'
+  },
+  {
+    id: 'g17', type: 'grammar',
+    topic: 'Câu mệnh lệnh',
+    question: "Mettez à l'impératif « Regarder au tableau » à la deuxième personne (Tu).",
+    translation: 'Chuyển sang mệnh lệnh với ngôi « Tu ».',
+    options: [
+      'Regardons au tableau !',
+      'Regardes au tableau !',
+      'Regardez au tableau !',
+      'Regarde au tableau !'
+    ],
+    correct: 3,
+    explanation: 'Mệnh lệnh ngôi « tu » với động từ nhóm 1 « regarder » → bỏ -s: « Regarde ». Đáp án đúng là D.'
+  },
+  {
+    id: 'g18', type: 'grammar',
+    topic: 'Động từ – Chia thì hiện tại',
+    question: "Ils ____ souvent le bus pour aller à l'école.",
+    translation: 'Họ thường đi xe buýt đến trường.',
+    options: ['prend', 'prennent', 'prenez', 'prenons'],
+    correct: 1,
+    explanation: 'Chủ ngữ « Ils » với động từ « prendre » ở thì hiện tại → « prennent ». Đáp án đúng là B.'
+  },
+  {
+    id: 'g19', type: 'grammar',
+    topic: 'Từ để hỏi',
+    question: '____ tu trouves cette table ? Elle est jolie, non ?',
+    translation: 'Bạn thấy chiếc bàn này thế nào? Nó đẹp nhỉ?',
+    options: ['Comment', 'Combien', 'Quels', 'Quelles'],
+    correct: 0,
+    explanation: 'Hỏi ý kiến, cảm nhận → dùng « Comment ». Đáp án đúng là A.'
+  },
+  {
+    id: 'g20', type: 'grammar',
+    topic: 'Tính từ – Từ trái nghĩa',
+    question: 'Trouvez le contraire de la phrase « Mon voisin est calme ».',
+    translation: 'Tìm câu trái nghĩa với « Hàng xóm của tôi trầm tính ».',
+    options: [
+      'Ma voisine est bruyant.',
+      'Ma voisine est grande.',
+      'Ma voisine est petite.',
+      'Ma voisine est bruyante.'
+    ],
+    correct: 3,
+    explanation: 'Trái nghĩa của « calme » (trầm) là « bruyant(e) » (ồn ào). « voisine » giống cái → « bruyante ». Đáp án đúng là D.'
+  },
+  {
+    id: 'g21', type: 'grammar',
+    topic: 'Tính từ chỉ định',
+    question: '____ sacs sont très grands.',
+    translation: 'Những chiếc túi này rất to.',
+    options: ['Ce', 'Cet', 'Cette', 'Ces'],
+    correct: 3,
+    explanation: '« sacs » giống đực số nhiều → « Ces ». Đáp án đúng là D.'
+  },
+  {
+    id: 'g22', type: 'grammar',
+    topic: 'Cấu trúc C\'est un… (trùng câu 11)',
+    question: 'Cet appartement a une belle terrasse.',
+    translation: 'Căn hộ này có một sân thượng đẹp. (Câu này trùng với câu 11 – giữ nguyên theo đề gốc.)',
+    options: [
+      "C'est un appartement avec un belle terrasse.",
+      "C'est un appartement avec une belle terrasse.",
+      "C'est un appartement a avec une belle terrasse.",
+      "C'est une appartement avec une belle terrasse."
+    ],
+    correct: 1,
+    explanation: '« appartement » giống đực → « un appartement ». « terrasse » giống cái → « une belle terrasse ». Đáp án đúng là B.'
+  },
+  {
+    id: 'g23', type: 'grammar',
+    topic: 'Giới từ địa điểm (trùng câu 13)',
+    question: 'Elle va ____ gare.',
+    translation: 'Cô ấy đi đến nhà ga. (Câu này trùng với câu 13 – giữ nguyên theo đề gốc.)',
+    options: ['à la', "à l'", 'au', 'à'],
+    correct: 0,
+    explanation: '« gare » giống cái số ít → « à la gare ». Đáp án đúng là A.'
+  },
+  {
+    id: 'g24', type: 'grammar',
+    topic: 'Từ để hỏi địa điểm',
+    question: 'Trouvez la bonne question de la réponse « Les placards sont dans le salon. »',
+    translation: 'Tìm câu hỏi đúng cho câu trả lời « Những chiếc tủ đựng trong phòng khách ».',
+    options: [
+      'Où se trouve la cuisine ?',
+      'Où sont les toilettes ?',
+      'Où sont les placards ?',
+      'Où est la chambre ?'
+    ],
+    correct: 2,
+    explanation: 'Câu trả lời nói về « les placards » (những chiếc tủ). Câu hỏi phải là « Où sont les placards ? ». Đáp án đúng là C.'
+  }
 ];
 
 /* =====================================================================
@@ -785,13 +1022,6 @@ function renderExamIntro(){
 
   let html = '';
 
-  if(gCount === 0){
-    html += '<div class="notice warn"><b>Chưa có câu hỏi Ngữ pháp + Từ vựng.</b><br>' +
-            'Hãy mở file <code>index.html</code> và dán 30 câu hỏi gốc vào mảng ' +
-            '<code>GRAMMAR_QUESTIONS</code> (ở đầu phần <code>&lt;script&gt;</code>). ' +
-            'Hiện tại đề thi chỉ gồm <b>' + rCount + '</b> câu Đọc hiểu.</div>';
-  }
-
   html += '' +
     '<div class="card hero">' +
       '<h2>Chế độ Thi thử</h2>' +
@@ -980,32 +1210,18 @@ function finishExam(){
 
   lastResult = {
     date: Date.now(),
-    total: total,
-    correct: correct,
-    wrong: wrong,
-    unanswered: unanswered,
-    score10: score10,
-    percent: percent,
-    gvTotal: gvTotal,
-    gvCorrect: gvCorrect,
-    rdTotal: rdTotal,
-    rdCorrect: rdCorrect,
-    details: details,
-    showReview: false
+    total: total, correct: correct, wrong: wrong, unanswered: unanswered,
+    score10: score10, percent: percent,
+    gvTotal: gvTotal, gvCorrect: gvCorrect,
+    rdTotal: rdTotal, rdCorrect: rdCorrect,
+    details: details, showReview: false
   };
 
   store.examHistory.push({
-    date: lastResult.date,
-    total: total,
-    correct: correct,
-    wrong: wrong,
-    unanswered: unanswered,
-    score10: score10,
-    percent: percent,
-    gvCorrect: gvCorrect,
-    gvTotal: gvTotal,
-    rdCorrect: rdCorrect,
-    rdTotal: rdTotal
+    date: lastResult.date, total: total, correct: correct, wrong: wrong,
+    unanswered: unanswered, score10: score10, percent: percent,
+    gvCorrect: gvCorrect, gvTotal: gvTotal,
+    rdCorrect: rdCorrect, rdTotal: rdTotal
   });
   if(store.examHistory.length > 100) store.examHistory = store.examHistory.slice(-100);
 
@@ -1042,7 +1258,6 @@ function renderResults(){
   }
 
   const r = lastResult;
-
   let html = '';
 
   html += '<div class="card score-hero">';
@@ -1152,12 +1367,6 @@ function renderPracticeMenu(){
   const totalCount = FULL_BANK.length;
 
   let html = '';
-
-  if(gvCount === 0){
-    html += '<div class="notice warn"><b>Chưa có câu hỏi Ngữ pháp + Từ vựng.</b><br>' +
-            'Hãy mở file <code>index.html</code> và dán 30 câu hỏi gốc vào mảng ' +
-            '<code>GRAMMAR_QUESTIONS</code> (ở đầu phần <code>&lt;script&gt;</code>).</div>';
-  }
 
   html += '<div class="card">' +
     '<h2>Chế độ Luyện tập</h2>' +
@@ -1573,13 +1782,9 @@ function renderProgress(){
     practice = {
       mode: 'wrong',
       questions: questions,
-      index: 0,
-      chosen: null,
-      answered: false,
-      correctCount: 0,
-      answeredCount: 0,
-      showPassage: false,
-      finished: false
+      index: 0, chosen: null, answered: false,
+      correctCount: 0, answeredCount: 0,
+      showPassage: false, finished: false
     };
     showView('practice');
     renderPracticeView();
@@ -1613,11 +1818,6 @@ function renderProgress(){
     'Ngữ pháp + Từ vựng =', GRAMMAR_BANK.length,
     '| Đọc hiểu =', READING_BANK.length,
     '| Tổng =', FULL_BANK.length);
-
-  if(GRAMMAR_BANK.length === 0){
-    console.warn('[French A1 Quiz] Mảng GRAMMAR_QUESTIONS đang trống. ' +
-      'Hãy dán 30 câu hỏi Ngữ pháp + Từ vựng gốc vào mảng này để kích hoạt đủ 37 câu thi thử.');
-  }
 })();
 </script>
 </body>
